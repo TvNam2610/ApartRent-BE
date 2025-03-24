@@ -1,0 +1,241 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// Enum định nghĩa trạng thái bài đăng
+enum PostStatus {
+  PENDING     // Đang chờ duyệt
+  APPROVED    // Đã duyệt
+  REJECTED    // Bị từ chối
+}
+
+// Enum định nghĩa trạng thái giao dịch
+enum TransactionStatus {
+  PENDING     // Đang chờ xử lý
+  COMPLETED   // Hoàn tất
+  CANCELLED   // Đã hủy
+}
+
+// Enum định nghĩa trạng thái hợp đồng
+enum ContractStatus {
+  ACTIVE      // Hợp đồng đang có hiệu lực
+  TERMINATED  // Hợp đồng đã kết thúc
+  PENDING     // Đang chờ xử lý
+}
+
+// Enum định nghĩa trạng thái bất động sản
+enum RealEstateStatus {
+  FOR_SALE    // Đang bán
+  FOR_RENT    // Đang cho thuê
+  SOLD        // Đã bán
+  RENTED      // Đã cho thuê
+}
+
+// Enum định nghĩa loại giao dịch
+enum TransactionType {
+  RENT        // Thuê
+  SALE        // Bán
+}
+
+// Enum định nghĩa vai trò người dùng
+enum UserRole {
+  ADMIN      
+  USER        
+}
+
+model Package {
+    id      String  @id @default(auto()) @map("_id") @db.ObjectId
+    name    String
+    price   Float
+    duration Int // Số ngày
+    posts   Post[]
+}
+
+model User {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  email      String   @unique
+  username   String   @unique
+  password   String
+  avatar     String?
+  phone      String?
+  role       UserRole
+  createAt   DateTime @default(now())
+  address    Address?
+  addressId  String?   @db.ObjectId
+  posts      Post[]
+  favoriteList FavoriteList[]
+
+  wallet    Wallet?
+  walletId  String?   @db.ObjectId
+
+  chats     Chat[]    @relation(fields: [chatIDs],  references: [id])
+  chatIDs    String[]  @db.ObjectId
+
+}
+model Wallet {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   @db.ObjectId
+  user        User?     @relation(fields: [userId], references: [id]) 
+  balance     Float    @default(0.0) // Số dư mặc định là 0
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId])
+}
+//
+model Address {
+  id       String  @id  @default(auto()) @map("_id") @db.ObjectId
+  city     String
+  district String
+  ward     String
+  user     User?   @relation(fields: [userId], references: [id]) 
+  userId   String?  @db.ObjectId
+
+  @@unique([userId])
+}
+
+
+
+// Mô hình RealEstate (Bất động sản)
+model RealEstate {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  description String
+  price       Float
+  location    String
+  status      RealEstateStatus 
+  bedrooms    Int
+  bathrooms   Int
+  area        Float
+  floor       Int
+  features    String[]
+  images      String[]
+  Post Post[]
+}
+
+// Mô hình Post (Bài đăng)
+model Post {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  content     String
+  status      PostStatus 
+  createAt    DateTime   @default(now())
+  realEstateId String     @db.ObjectId
+  realEstate RealEstate   @relation(fields: [realEstateId], references: [id])
+
+  userId  String @db.ObjectId
+  user    User   @relation(fields: [userId], references: [id])
+
+  favoriteList    FavoriteList[]
+
+  packageId   String?   @db.ObjectId
+  package     Package?  @relation(fields: [packageId], references: [id])
+}
+// Mô hình FavoriteList (Danh sách yêu thích)
+model FavoriteList {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId         String   @db.ObjectId
+  user           User @relation(fields: [userId], references: [id])
+  post           Post     @relation(fields: [postId], references: [id])
+  postId         String   @unique @db.ObjectId
+  createdAt      DateTime @default(now())
+
+  @@unique([userId, postId])
+  
+}
+
+// Mô hình Chat (Tin nhắn)
+model Chat {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  users       User[]      @relation(fields: [userIDs], references: [id])
+  userIDs     String[]    @db.ObjectId
+  seenBy      String[]    @db.ObjectId
+  messages     Message[]
+  lastMessage String?
+  createAt   DateTime     @default(now())
+}
+
+model Message {
+  id        String        @id @default(auto())  @map("_id")   @db.ObjectId
+  text      String      
+  userId    String      
+  chat      Chat          @relation(fields: [chatId], references: [id])
+  chatId    String        @db.ObjectId
+  createAt   DateTime     @default(now())
+}
+//Mô hình Transaction (Giao dịch)
+// model Transaction {
+//   id             String           @id @default(auto()) @map("_id") @db.ObjectId
+//   userId         String           @db.ObjectId
+//   user           User             @relation(fields: [userId], references: [id])
+//   realEstateId   String           @db.ObjectId
+//   realEstate     RealEstate       @relation(fields: [realEstateId], references: [id])
+//   totalAmount    Float
+//   type           TransactionType  // Sử dụng enum TransactionType cho loại giao dịch
+//   status         TransactionStatus // Sử dụng enum TransactionStatus cho trạng thái giao dịch
+//   createAt       DateTime         @default(now())
+
+//   contract Contract?
+// }
+
+// Mô hình Contract (Hợp đồng)
+// model Contract {
+//   id             String   @id @default(auto()) @map("_id") @db.ObjectId
+//   buyerId        String   @db.ObjectId
+//   buyer          User     @relation(fields: [buyerId], references: [id], name: "BuyerRelation")  // Đặt tên cho quan hệ buyer
+//   sellerId       String   @db.ObjectId
+//   seller         User     @relation(fields: [sellerId], references: [id], name: "SellerRelation") // Đặt tên cho quan hệ seller
+//   realEstateId   String   @db.ObjectId
+//   realEstate     RealEstate @relation(fields: [realEstateId], references: [id])
+//   createAt       DateTime @default(now())
+//   status         ContractStatus
+// }
+
+
+
+// Mô hình Notification (Thông báo)
+// model Notification {
+//   id          String   @id @default(auto()) @map("_id") @db.ObjectId
+//   message     String
+//   type        String
+//   readAt      DateTime?
+//   createAt    DateTime @default(now())
+//   userId      String   @db.ObjectId
+//   user        User     @relation(fields: [userId], references: [id])
+// }
+
+
+
+
+
+// Mô hình Report (Báo cáo)
+// model Report {
+//   id          String   @id @default(auto()) @map("_id") @db.ObjectId
+//   userId      String   @db.ObjectId
+//   user        User     @relation(fields: [userId], references: [id])
+//   realEstateId String   @db.ObjectId
+//   realEstate RealEstate @relation(fields: [realEstateId], references: [id])
+//   content     String
+//   createAt    DateTime @default(now())
+// }
+
+// Mô hình Admin (Quản trị viên)
+// model Admin {
+//   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+//   username  String   @unique
+//   email     String   @unique
+//   password  String
+//   role      UserRole @default(ADMIN) // Sử dụng enum UserRole cho vai trò
+
+//   reports   Report[]
+// }
