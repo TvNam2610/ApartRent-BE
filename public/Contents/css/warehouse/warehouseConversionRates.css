@@ -1,0 +1,154 @@
+.main {
+
+    margin-left: 200px;
+}
+
+@media (max-width: 600px) {
+    .main {
+        padding: 15px;
+        margin: 10px;
+    }
+}
+
+.upload-container {
+    max-width: 350px;
+    /* margin: 68px auto; */
+    margin: 70px 0px 10px 200px;
+    border: 2px dashed #007bff;
+    border-radius: 10px;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+
+.upload-container h2 {
+    color: #007bff;
+}
+
+.upload-container input[type="file"] {
+    display: none;
+}
+
+
+
+.message {
+    margin-top: 20px;
+    font-size: 1em;
+}
+
+.data-table {
+    margin-top: 20px;
+}
+
+.data-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+
+
+.data-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.data-table tr:hover {
+    background-color: #ddd;
+}
+
+.pagination {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+
+.pagination span {
+    margin: 0 10px;
+    font-weight: bold;
+}
+
+
+
+
+.search-container {
+    display: flex;
+    position: relative;
+    /* Đặt relative để làm gốc cho dropdown */
+    align-items: center;
+    justify-content: end;
+    /* padding: 10px 20px; */
+    border-radius: 8px;
+}
+
+.search-container input[type="text"] {
+    flex: 1;
+    /* Input chiếm toàn bộ không gian còn lại */
+    max-width: 500px;
+    /* Giới hạn chiều rộng tối đa */
+    padding: 7px;
+    border: 1px solid #dee2e6;
+    /* Viền màu nhẹ */
+    border-radius: 4px;
+    margin-right: 10px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-container input[type="text"]:focus {
+    border-color: #007bff;
+    /* Đổi màu viền khi focus */
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+    /* Hiệu ứng đổ bóng */
+    outline: none;
+}
+
+
+
+
+
+
+
+.awesomplete ul {
+    max-height: 250px;
+    overflow-y: auto;
+    padding-left: 0;
+    list-style: none;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.awesomplete li {
+    padding: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.awesomplete li:hover,
+.awesomplete li[aria-selected="true"] {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Tạo responsive */
+@media (max-width: 768px) {
+    .search-container {
+        flex-direction: column;
+        /* Khi màn hình nhỏ, đổi sang dạng cột */
+        align-items: stretch;
+        /* Canh đều theo chiều rộng */
+    }
+
+    .search-container input[type="text"] {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+}
+

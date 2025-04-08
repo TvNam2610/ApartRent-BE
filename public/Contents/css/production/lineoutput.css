@@ -1,0 +1,209 @@
+
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.main_content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    padding: 20px;
+    width: 100%;
+    height: calc(100% - 40px); 
+    /* overflow-y: auto; */
+}
+
+.grid-item {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.grid-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.grid-item .line {
+    font-weight: bold;
+    font: 2em sans-serif;
+    margin-bottom: 25px;
+}
+
+.grid-item .output {
+    color: #555;
+    font: 2em sans-serif;
+}
+
+
+
+
+
+.grid-item .eff {
+    font-weight: bold; /* Đậm */
+    color: #4CAF50; /* Màu xanh lá cây để biểu thị hiệu suất tốt */
+    font-size: 1.5em; /* Kích thước chữ lớn hơn một chút */
+    margin-top: 10px; /* Khoảng cách phía trên */
+}
+
+/* Có thể thêm kiểu cho hiệu suất thấp, chẳng hạn như màu đỏ */
+.grid-item .eff.low {
+    color: #F44336; /* Màu đỏ để cảnh báo */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.detail-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(52, 73, 94, 1.0);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+
+
+.detail-container .detail-line,
+.detail-container .detail-output,
+.detail-container .detail-eff {
+    margin: 80px 0;
+    font-size: 5vw;
+    color: white; 
+}
+
+#close-detail {
+    padding: 40px 20px;
+    border: none;
+    background-color: #e74c3c;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#close-detail:hover {
+    background-color: #c0392b;
+}
+
+.detail-content {
+    display: flex;
+    justify-content: space-between;
+    
+   
+}
+.detail-left, .detail-right {
+    border: 3px solid #fff;
+    border-radius: 5px;
+    margin: 25px;
+    padding: 100px;
+    width: 75vh;
+    white-space: nowrap;      /* Ngăn ngừa ngắt dòng */
+    overflow: hidden;         /* Ẩn nội dung vượt quá */
+    text-overflow: ellipsis;
+}
+
+#line-output-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(6, 1fr); 
+    gap: 10px; 
+    width: 100%; 
+}
+
+
+.detail-label {
+    font-weight: bold; 
+    margin-top: -15px; 
+    font: 4em sans-serif;
+    text-align: center;
+}
+.detail-label-name {
+    font-weight: bold;
+    font: 10em sans-serif;
+}
+
+
+
+
+
+
+
+button {
+    margin-top: 20px; /* Khoảng cách giữa nút và các phần tử khác */
+    padding: 15px 30px; /* Khoảng cách bên trong */
+    background-color: #3498db; /* Màu nền */
+    color: white; /* Màu chữ */
+    border: none; /* Không có đường viền */
+    border-radius: 5px; /* Bo tròn góc */
+    font-size: 1.2em; /* Kích thước chữ */
+    cursor: pointer; /* Con trỏ chuột khi hover */
+    transition: background-color 0.3s, transform 0.2s; /* Hiệu ứng chuyển động */
+}
+
+button:hover {
+    background-color: #2980b9; /* Màu nền khi hover */
+    transform: scale(1.05); /* Phóng to một chút khi hover */
+}
+
+button:focus {
+    outline: none; /* Bỏ viền khi được chọn */
+}
+
+
+
+
+
+.eff-low {
+    background-color: #f50303a6;
+}
+
+.eff-medium {
+    background-color: #fff404c9;
+}
+
+.eff-green {
+    background-color: green;
+}
+
+.eff-high {
+    background-color: #120ef5c2;
+}

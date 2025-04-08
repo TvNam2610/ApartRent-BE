@@ -1,0 +1,609 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    padding: 20px;
+}
+
+
+main {
+    margin-top: 20px;
+}
+
+.upload-section {
+    padding: 20px;
+}
+
+.form-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-left,
+.form-right {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.form-right {
+    margin-right: 0;
+}
+
+.submit-btn {
+    margin-left: 10px;
+}
+
+.upload-section h2,
+.info-section h2 {
+    margin-bottom: 10px;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+}
+
+.switch {
+    margin-right: 10px;
+}
+
+.switch-label {
+    font-weight: bold;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    /* Adjust width */
+    height: 24px;
+    /* Adjust height */
+}
+
+.switch input {
+    opacity: 0;
+    /* Hide the default checkbox */
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+    /* Rounded edges */
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    /* Adjust height */
+    width: 20px;
+    /* Adjust width */
+    left: 2px;
+    /* Adjust position */
+    bottom: 2px;
+    /* Adjust position */
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked+.slider {
+    background-color: #007BFF;
+    /* Change background on check */
+}
+
+input:checked+.slider:before {
+    transform: translateX(16px);
+    /* Move slider */
+}
+
+
+
+.switch-label {
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+/* button {
+    padding: 10px 15px ;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.8;
+} */
+
+
+footer {
+    margin-top: 20px;
+    text-align: center;
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+}
+
+#formSection {
+    display: none;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th,
+table td {
+    padding: 10px;
+    text-align: center;
+}
+
+table input {
+    width: 90%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.file-upload-section {
+    padding: 10px;
+}
+
+
+
+
+/* .pagination {
+    display: flex !important;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination button {
+    padding: 10px 15px;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f4f4f4;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.pagination button:hover {
+    background-color: #007BFF;
+    color: white;
+}
+
+.pagination .active {
+    background-color: #007BFF;
+    color: white;
+    border: 1px solid #007BFF;
+} */
+.pagination {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    /* Căn giữa theo chiều dọc */
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
+    /* Font chữ cho phần phân trang */
+}
+
+.pagination .page-info {
+    margin-right: 15px;
+    /* Khoảng cách giữa thông tin trang và nút */
+    font-size: 16px;
+    /* Kích thước chữ cho thông tin trang */
+    color: #555;
+    /* Màu chữ cho thông tin trang */
+}
+
+.pagination button {
+    padding: 10px 15px;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f4f4f4;
+    color: #333;
+    /* Màu chữ cho nút */
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    /* Hiệu ứng chuyển tiếp cho màu nền và chữ */
+}
+
+.pagination button:hover {
+    background-color: #007BFF;
+    color: white;
+}
+
+.pagination .active {
+    background-color: #007BFF;
+    color: white;
+    border: 1px solid #007BFF;
+    /* Đường viền cho nút đang hoạt động */
+}
+
+.pagination button:disabled {
+    background-color: #f0f0f0;
+    /* Màu nền cho nút không khả dụng */
+    color: #aaa;
+    /* Màu chữ cho nút không khả dụng */
+    cursor: not-allowed;
+    /* Con trỏ khi di chuột qua nút không khả dụng */
+    border-color: #ddd;
+    /* Đường viền cho nút không khả dụng */
+}
+
+
+
+
+
+
+
+.status-processing {
+    font-weight: bold;
+    color: orange;
+    background-color: transparent;
+}
+
+.status-completed {
+    font-weight: bold;
+    color: green;
+    background-color: transparent;
+}
+
+.status-error {
+    font-weight: bold;
+    color: red;
+    background-color: transparent;
+} 
+
+
+
+.advanced-search {
+    margin-top: 30px;
+}
+
+.advanced-search h2 {
+    margin-bottom: 15px;
+    font-size: 20px;
+    color: #007BFF;
+}
+
+table {
+    width: 100%;
+    /* Chiếm hết chiều rộng */
+    border-collapse: collapse;
+    /* Xóa khoảng cách giữa các ô */
+}
+
+table td {
+    padding: 10px;
+    /* Khoảng cách giữa các ô */
+}
+
+.form-group-advanced {
+display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-group-advanced label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="date"],
+select {
+    width: 70%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Tạo hiệu ứng mờ cho nền khi modal mở */
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Nền tối mờ */
+}
+
+/* Modal container */
+.modal-dialog {
+    max-width: 600px;
+    /* Đặt chiều rộng tối đa cho modal */
+    margin: 30px auto;
+    /* Đặt khoảng cách từ trên xuống và căn giữa modal */
+}
+
+/* Modal nội dung */
+.modal-content {
+    background-color: #fff;
+    /* Màu nền modal */
+    border-radius: 8px;
+    /* Góc bo tròn */
+    border: none;
+    /* Không có viền */
+}
+
+/* Header của modal */
+.modal-header {
+    background-color: #007bff;
+    /* Màu nền header */
+    color: #fff;
+    /* Màu chữ */
+    border-top-left-radius: 8px;
+    /* Góc trên bên trái bo tròn */
+    border-top-right-radius: 8px;
+    /* Góc trên bên phải bo tròn */
+    padding: 15px;
+}
+
+/* Tiêu đề modal */
+.modal-title {
+    font-size: 20px;
+    /* Kích thước font tiêu đề */
+    font-weight: bold;
+}
+
+/* Nút đóng modal */
+.btn-close {
+    color: #fff;
+    /* Màu chữ của nút đóng */
+    background: transparent;
+    border: none;
+}
+
+/* Body của modal */
+.modal-body {
+    padding: 20px;
+}
+
+/* Các trường input trong modal */
+.modal-body input[type="number"],
+.modal-body input[type="text"] {
+    width: 100%;
+    /* Chiếm 100% chiều rộng của container */
+    padding: 10px;
+    margin: 8px 0;
+    /* Khoảng cách trên dưới */
+    border: 1px solid #ccc;
+    /* Viền nhẹ cho input */
+    border-radius: 5px;
+    /* Góc bo tròn cho input */
+    box-sizing: border-box;
+}
+
+/* Đặt label cho các trường input */
+.modal-body label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    /* Khoảng cách giữa label và input */
+}
+
+/* Footer của modal */
+.modal-footer {
+    background-color: #f1f1f1;
+    /* Màu nền của footer */
+    padding: 15px;
+    border-bottom-left-radius: 8px;
+    /* Góc dưới bên trái bo tròn */
+    border-bottom-right-radius: 8px;
+    /* Góc dưới bên phải bo tròn */
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Nút trong modal */
+.modal-footer button {
+    padding: 10px 20px;
+    /* Padding cho nút */
+    font-size: 16px;
+    /* Kích thước font chữ */
+    border: none;
+    border-radius: 5px;
+    /* Góc bo tròn cho nút */
+    cursor: pointer;
+}
+
+.modal-footer button.btn-secondary {
+    background-color: #6c757d;
+    /* Màu nền cho nút hủy */
+    color: #fff;
+}
+
+.modal-footer button.btn-primary {
+    background-color: #007bff;
+    /* Màu nền cho nút lưu */
+    color: #fff;
+    margin-left: 10px;
+}
+
+.modal-footer button:hover {
+    opacity: 0.9;
+    /* Hiệu ứng mờ khi hover */
+}
+
+
+
+
+
+
+
+
+
+/* Cài đặt chung cho modal */
+.modal {
+    display: none;
+    /* Mặc định ẩn modal */
+    position: fixed;
+    z-index: 1000;
+    /* Đảm bảo modal nằm trên cùng */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Màu nền mờ để làm mờ nền trang */
+    overflow: auto;
+    /* Cho phép cuộn khi nội dung modal quá lớn */
+}
+
+/* Nội dung của modal */
+.modal-content {
+    background-color: #f9f9f9;
+    margin: 10% auto;
+    /* Khoảng cách từ trên xuống và canh giữa modal */
+    padding: 20px;
+    border: 1px solid #ccc;
+    width: 40%;
+    /* Độ rộng modal */
+    border-radius: 10px;
+    /* Bo tròn các góc */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Hiệu ứng đổ bóng */
+    animation: fadeIn 0.3s ease-in-out;
+    /* Hiệu ứng xuất hiện nhẹ nhàng */
+}
+
+/* Hiệu ứng mờ dần vào */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Nút đóng modal */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+/* Style cho modal */
+#loadingModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Màu nền mờ */
+    z-index: 9999;
+    /* Đặt z-index cao để hiển thị trên tất cả các phần khác */
+}
+
+/* Style cho spinner */
+.spinner {
+    border: 16px solid #f3f3f3;
+    /* Màu nền */
+    border-top: 16px solid #3498db;
+    /* Màu của phần quay */
+    border-radius: 50%;
+    width: 60px;
+    /* Đường kính */
+    height: 60px;
+    /* Đường kính */
+    animation: spin 2s linear infinite;
+    /* Chạy animation */
+}
+
+/* Animation cho spinner */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+.search-header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin:  20px;
+}
+.return-table{
+box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;}
+
+
+
+
+.download-section{
+        width: 50%;
+        padding: 0px 10px 0px 25px;
+        margin-bottom: 50px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+}

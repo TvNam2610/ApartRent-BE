@@ -1,0 +1,306 @@
+input{
+    height: 30px !important;
+    line-height: 100% !important;
+    outline: none;
+}
+button{
+    height: 30px ;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+
+
+}
+
+
+select{
+    width: 120px;
+}
+.main_content_header {
+    height: 100px;
+    width: 100%;
+    display: flex;
+    justify-content:space-evenly;
+    padding:10px 0px 10px 0px;
+
+}
+
+.main_content_header_output {
+    height: 100%;
+    width: 24%;
+    padding: 4px;
+    display: flex;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border-radius: 5px;
+    background-color: #00a65a ;
+    /* background-color: #17a2b8 ; */
+    color: white;
+    font-weight: 500;
+  
+    padding-left: 10px;
+}
+
+.adg{
+    color:#285874
+
+}
+
+.main_content_header_rate{
+    height: 100%;
+    width: 24%;
+    padding: 4px;
+    display: flex;
+    box-sizing: border-box;
+    border-radius: 5px;
+    color: white;
+    font-weight: 500;
+    font-size: 12px;
+    padding-left: 15px;
+
+}
+
+
+
+.main_content_header_output div{
+    flex: 1;
+
+}
+.main_content_header_output span{
+
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    color: #057945;
+    font-size: 50px;
+    z-index: 1;
+}
+
+.main_content_header_rate *{
+    flex: 1;
+
+}
+
+.output_number{
+    font-size: 2.5em;
+}
+
+
+
+.main_content_header_rate span{
+
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    font-size: 50px;
+    
+}
+
+.rate_number{
+    font-size: 2.5em;
+}
+
+p{
+    font-size: 12px;
+}
+
+
+.main_content_body {
+    min-height: 549px;
+    height: 549px;
+    width: 100%;
+
+}
+
+
+.main_content_body_filter{
+    width: 60%;
+    height: 30px;
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    padding-top: 50px 0px;
+    border-radius: 5px;
+}
+.main_content_body_filter *{
+    padding: 0 5px;
+}
+.main_content_body_table{
+    padding: 10px;
+    display: flex;
+    margin-top: 10px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 5px;
+    height: 70vh;
+
+}
+
+.table-container {
+    overflow-y:scroll;
+    max-height: 100%;
+
+}
+
+.table{
+    border-collapse: collapse;
+}
+.tableBody{
+    margin-top: 100px;
+}
+
+
+th,td{
+    padding:6px;
+    border: 1px solid #ddd;
+   
+}
+
+thead th{
+    /* position: sticky; */
+    top:0;
+    background-color: #17a2b8;
+   
+    border:1px solid black;
+    color: white;
+
+}
+
+.progress-bar {
+    background-color: #007bff;
+    height: 100%;
+}
+
+.output{
+    display: flex;
+    position: relative;
+    min-height: 400px;
+    height: 450px !important;
+    box-sizing: border-box;
+}
+
+
+
+.rate30{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:80%;
+    background-color:#dd4b39;
+    border-radius:5px;
+    color:white;
+    font-size:12px;
+    font-weight: 500;
+}
+
+.rate60{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:80%;
+    background-color:#f39c12;
+    border-radius:5px;
+    color:white;
+    font-size:12px;
+    font-weight: 500;
+}
+
+.rate99{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:80%;
+    background-color:#3c8dbc;
+    border-radius:5px;
+    color:white;
+    font-size:12px;
+    font-weight: 500;
+}
+.rate_default{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:80%;
+    background-color:#00a65a;
+    border-radius:5px;
+    color: white;
+    font-size:12px;
+    font-weight: 500;
+}
+.rate_null{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:80%;
+    background-color:#aebbb5ea;
+    border-radius:5px;
+    color: white;
+    font-size:12px;
+    font-weight: 500;
+}
+
+.cus_modal{
+    width: 80% !important;
+    margin: 0 auto !important;
+    
+}
+
+
+#dropdown-div{
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 300px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    z-index: 1000;
+    display: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 5px;
+    display: none ;
+
+}
+
+#dropdown-div > div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20%;
+    flex-wrap: wrap;
+   
+}
+
+#filter{
+    position: relative;
+    cursor: pointer;
+    
+}
+
+.viewType{
+    width: 50%;
+    height:30px !important;
+    background-color: rgba(19, 17, 17, 0.849) ;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.active{
+   
+    background-color: #00a65a !important;
+
+}
+
+
+
+
+
+
+
+
+
+
+

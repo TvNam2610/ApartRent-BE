@@ -1,0 +1,336 @@
+/* MachineAnalysis.css */
+
+/* Đặt kiểu chung cho toàn bộ trang */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+/* Bố cục chính của trang */
+.main_content {
+    padding: 20px;
+}
+
+/* Khối thông tin với kiểu hiện đại */
+.info-box {
+    background: #ffffff;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    padding: 15px;
+}
+
+.info-box-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #ffffff;
+    border-radius: 50%;
+    background-color: #007bff;
+    margin-right: 15px;
+}
+
+.info-box-content {
+    flex: 1;
+}
+
+.info-box-text {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.info-box-number {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+/* Cấu trúc cho các thẻ với kiểu hiện đại */
+.card {
+    background: #ffffff;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    height: 80px;
+    
+}
+
+/* Định dạng tiêu đề card */
+.card-header {
+    background: #007bff;
+    color: #ffffff;
+    padding: 15px;
+    border-bottom: 1px solid #e0e0e0;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-header h5 {
+    margin: 0;
+}
+
+.card-tools .btn-tool {
+    color: #ffffff;
+    background: transparent;
+}
+
+.card-tools .btn-tool:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.card-body {
+    padding: 20px;
+}
+
+/* Tiến trình với kiểu đẹp hơn */
+.progress-group {
+    margin-bottom: 15px;
+}
+
+.progress-group .progress-text {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.progress {
+    height: 8px;
+    background-color: #c6cfd1 !important;
+    border-radius: 4px;
+}
+
+.progress-bar {
+    transition: width 0.6s ease;
+}
+
+.progress-bar.bg-primary {
+    background-color: #007bff;
+}
+
+.progress-bar.bg-danger {
+    background-color: #dc3545;
+}
+
+.progress-bar.bg-success {
+    background-color: #28a745;
+}
+
+.progress-bar.bg-warning {
+    background-color: #ffc107;
+}
+
+/* Chân thẻ với kiểu hiện đại */
+.card-footer {
+    padding: 15px;
+    border-top: 1px solid #e0e0e0;
+    border-radius: 0 0 8px 8px;
+}
+
+.description-block {
+    text-align: center;
+}
+
+.description-header {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.description-text {
+    font-size: 14px;
+}
+
+/* Các kiểu cho các nút công cụ */
+.btn-tool {
+    color: #ffffff;
+    background: transparent;
+}
+
+.btn-tool:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.btn-tool .fas {
+    font-size: 18px;
+}
+
+/* Đảm bảo các thông tin khối nằm trên cùng một hàng và không bị gãy xuống */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -15px;
+    margin-right: -15px;
+}
+
+
+
+/* Định dạng cho các khối thông tin trong cột */
+.info-box {
+    background: #dfe6e9;
+    border-radius: 5px;
+}
+
+.info-box-icon {
+    height: 50px;
+    width: 50px;
+}
+
+.info-box-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.info-box-text {
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.info-box-number {
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+}
+
+.info-box-number small {
+    font-size: 0.8em;
+    color: #666;
+}
+
+/* Các màu sắc cho biểu tượng */
+.bg-info {
+    background-color: #17a2b8;
+}
+
+.bg-danger {
+    background-color: #dc3545;
+}
+
+.bg-success {
+    background-color: #28a745;
+}
+
+.bg-warning {
+    background-color: #ffc107;
+}
+
+/* Định dạng cho card */
+.card {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+/* Định dạng tiêu đề card */
+.card-header {
+    background: #f8f9fa;
+    border-bottom: 1px solid #ddd;
+    padding: 15px;
+    position: relative;
+}
+
+/* Định dạng tiêu đề của card */
+.card-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Định dạng công cụ của card */
+.card-tools {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+/* Định dạng nhóm input */
+.input-group {
+    display: flex;
+    align-items: center;
+}
+
+/* Định dạng ô tìm kiếm */
+.form-control {
+    border-radius: 4px 0 0 4px;
+    border: 1px solid #ddd;
+}
+
+/* Định dạng nút tìm kiếm */
+.btn-default {
+    border-radius: 0 4px 4px 0;
+    border: 1px solid #ddd;
+    background-color: #f8f9fa;
+}
+
+/* Định dạng tiêu đề bảng */
+.table-head-fixed thead th {
+    background-color: #007bff;
+    color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    font-weight: bold;
+}
+
+/* Định dạng cho bảng */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 0;
+}
+
+/* Định dạng cho ô bảng */
+.table th,
+.table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+/* Định dạng hàng bảng */
+.table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Định dạng cho các thẻ trạng thái */
+.tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+}
+
+/* Các màu sắc cho thẻ trạng thái */
+.tag-success {
+    background-color: #28a745;
+}
+
+.tag-warning {
+    background-color: #ffc107;
+}
+
+.tag-primary {
+    background-color: #007bff;
+}
+
+.tag-danger {
+    background-color: #dc3545;
+}
+
+/* Định dạng phần thân card với bảng cuộn */
+.card-body.table-responsive {
+    overflow-y: auto;
+    height: 300px;
+}
+
+
+ 

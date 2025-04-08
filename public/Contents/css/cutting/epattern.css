@@ -1,0 +1,75 @@
+/* Đặt phong cách cho canvas */
+canvas {
+    background-color: #f9f9f9;
+    display: block;
+    margin: 20px auto;
+}
+
+/* Thiết lập body để căn giữa */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #eaeaea;
+    font-family: Arial, sans-serif;
+}
+/* CSS cho label */
+label {
+    display: flex;
+    align-items: center; /* Canh giữa nội dung theo chiều dọc */
+    margin: 10px 0; /* Khoảng cách trên và dưới */
+    font-family: 'Roboto', sans-serif; /* Font chữ */
+    font-size: 16px; /* Kích thước chữ */
+    color: #333; /* Màu chữ */
+}
+
+input[type="checkbox"] {
+    margin-right: 8px; /* Khoảng cách giữa checkbox và chữ */
+    accent-color: #b387f1; /* Màu cho checkbox (Chrome 90+) */
+}
+#barcodeInput {
+color: black;}
+
+#scaleInput{
+    color: black;}
+
+
+#header {
+    padding: 10px;
+    background-color: #f5f5f5; /* Màu nền cho header */
+    border-bottom: 1px solid #ccc; /* Đường viền dưới */
+}
+
+#barcodeInput {
+    padding: 10px; /* Thêm padding */
+    border: 1px solid #ccc; /* Đường viền */
+    border-radius: 4px; /* Bo tròn góc */
+    font-size: 16px; /* Kích thước chữ */
+    margin-left: 10px; /* Khoảng cách bên trái */
+}
+
+#toggleSidebar {
+    margin-right: 10px; /* Khoảng cách bên phải */
+}
+
+.label-container {
+    display: flex;
+    align-items: center; /* Căn giữa theo chiều dọc */
+}
+
+
+.canvas-container {
+    position: relative; /* Hoặc 'absolute' tùy theo nhu cầu */
+   
+}
+
+#myCanvas {
+    position: absolute; /* Hoặc 'relative' nếu bạn muốn nó di chuyển cùng với container */
+  
+    background-color: #fff; /* Màu nền cho canvas */
+}
+#sidebar {
+    display: none;
+}
+

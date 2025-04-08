@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+*{
+margin: 0;
+padding: 0;
+box-sizing:border-box;
+text-decoration: none;
+font-family: 'Poppins', sans-serif;
+}
+.molding-managermnet-container{
+    margin: 70px 20px 0px 210px !important;
+    height: 90vh;
+}
+.view-options{
+    display: flex;
+    justify-content: start;
+    flex-direction: row;
+    width: 40vh;
+}
+.view-option{
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #2c3e50;
+    text-wrap: nowrap;
+    margin-left: 5px;
+    padding: 5px;
+    border-radius: 10px;
+}
+.machine{
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}
+.machine:hover{
+    background-color: rgba(220, 221, 221, 0.212);
+    cursor: pointer;
+}
+.card-header-machine{
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    background-color: #ecf0f1; 
+    color: #2c3e50;
+    border-radius: 10px;
+    
+}
+.eff{
+    width: 27%;
+}
+.table-container {
+    max-height: 13.5vh;
+    overflow-y: auto;
+}
+
+.table-fixed-header {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-fixed-header thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #bdc3c7;
+}
+
+.table-fixed-header th,
+.table-fixed-header td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}

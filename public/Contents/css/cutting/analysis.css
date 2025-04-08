@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+*{
+margin: 0;
+padding: 0;
+box-sizing:border-box;
+text-decoration: none;
+font-family: 'Poppins', sans-serif;
+}
+.molding-managermnet-container{
+    margin: 70px 20px 0px 210px !important;
+    height: 90vh;
+}
+.view-options{
+    display: flex;
+    justify-content: start;
+    flex-direction: row;
+    width: 40vh;
+}
+.view-option{
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #2c3e50;
+    text-wrap: nowrap;
+    margin-left: 5px;
+    margin-bottom: 5px;
+    padding: 5px;
+    border-radius: 10px;
+}

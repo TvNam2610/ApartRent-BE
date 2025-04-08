@@ -1,0 +1,658 @@
+@font-face {
+    font-family: OpenSans;
+    src: url(/Contents/fonts/OpenSans/OpenSans-Regular.ttf);
+}
+
+/* fallback */
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: url(/Contents/fonts/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format('woff2');
+}
+
+
+.machine_map {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    /* left: 30%; */
+    width: 100%;
+    height: 92vh;
+}
+
+.machine_map_point {
+    font-weight: bold;
+    position: absolute;
+    left: 40%;
+    top: 80%;
+    animation: slideUpDown .75s infinite;
+}
+
+.machine_map_image {
+    width: 100%;
+    height: auto;
+    display: block;
+
+}
+
+.machine_map_point {
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -100%);
+    /* pointer-events: none; */
+}
+
+.main_content {
+    position: relative;
+    top: -1px;
+    padding-left: 0px !important;
+}
+
+.search_bar {
+    position: absolute;
+    /* Định vị phần tử này trên bức ảnh */
+    top: 10px;
+    /* Khoảng cách từ trên cùng */
+    left: 20px;
+    /* Khoảng cách từ bên trái */
+    z-index: 1000;
+    /* Đảm bảo thanh tìm kiếm nằm trên bức ảnh */
+    background: rgba(129, 123, 123, 0.622);
+    /* Nền trắng bán trong suốt để dễ đọc */
+    padding: 10px;
+    /* Padding để các phần tử không bị dính vào nhau */
+    border-radius: 5px;
+    /* Bo tròn góc */
+    display: flex;
+    /* Sử dụng Flexbox để căn chỉnh các phần tử theo chiều ngang */
+    align-items: center;
+    /* Căn chỉnh các phần tử dọc giữa */
+    width: 200px;
+}
+
+.form-control {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 5px;
+    /* Khoảng cách giữa các phần tử */
+}
+
+.btn-success {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 5px;
+    /* Khoảng cách giữa các phần tử */
+}
+
+.right-title {
+    position: absolute;
+    color: aliceblue;
+    right: 20px
+}
+
+.right-title h3 {
+    font-weight: bold;
+    font-size: 2em;
+}
+
+
+/* // css mới đoạn vị trí */
+.machine_map_point {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+
+.machine_map_point_name {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #0a0a0a7f;
+    color: #ecf0f1;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.6em;
+
+}
+
+
+
+/* Định dạng cho phần chi tiết mô hình */
+#modelDetailsSection {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: #2b2d2d7f;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    max-width: 600px;
+    z-index: 1000;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 9px;
+}
+
+@keyframes fall {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(10);
+        opacity: 1;
+    }
+}
+
+.fall-animation {
+    animation: fall 0.8s cubic-bezier(0.42, 0, 0.58, 1) forwards;
+}
+
+
+/* Định dạng cho bảng bên trong form */
+
+
+/* Định dạng cho tiêu đề của bảng */
+.form-detail th {
+    background-color: #17a3b879;
+    color: #ecf0f1;
+    padding: 5px;
+    border: 0.8px solid #ecf0f1;
+    font-size: 0.8em;
+}
+
+/* Định dạng cho các ô dữ liệu của bảng */
+td {
+    padding: 5px !important;
+    color: #ecf0f1;
+    border: 0.8px solid #ecf0f1;
+    font-size: 0.8em;
+    
+}
+
+
+
+
+/* Style cho modal chung */
+.modal {
+    display: none;
+    /* Ẩn modal theo mặc định */
+    /* position: fixed; */
+    /* Đặt modal ở vị trí cố định */
+    z-index: 1200;
+    /* Đảm bảo modal nằm trên các phần tử khác */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    /* overflow: auto; */
+    /* Thêm cuộn nếu nội dung lớn hơn modal */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Nền mờ tối */
+    /* overflow: hidden !important; */
+}
+
+/* Style cho nội dung modal */
+.modal-content {
+    background-color: #fefefe ;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 100%;
+    max-width: 850px;
+    border-radius: 5px;
+    position: relative;
+    animation: rise 0.2s cubic-bezier(0.42, 0, 0.58, 1) forwards;
+
+
+}
+
+
+/* Animation cho modal khi đóng */
+@keyframes rise {
+    0% {
+        transform: scale(0.4);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+.awesomplete{
+    padding: 5px;
+}
+/* Style cho nút đóng */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+
+
+
+
+
+
+/* ALL Modal */
+.content-container-building {
+   
+    flex-wrap: wrap;
+    gap: 10px;
+    /* Khoảng cách giữa các div */
+    padding: 10px;
+    display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        /* 8 cột */
+        /* grid-template-rows: repeat(10, 1fr); */
+        /* 10 dòng */
+}
+/* Modal3 */
+/* CSS cho modal 3 */
+#modal3 .modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 100%;
+    max-width: 1250px;
+    border-radius: 5px;
+    position: relative;
+    animation: rise 0.2s cubic-bezier(0.42, 0, 0.58, 1) forwards;
+
+
+}
+#modal3 .content-container-building {
+    flex-wrap: wrap;
+        gap: 10px;
+        /* Khoảng cách giữa các div */
+        padding: 10px;
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+}
+/* Modal8 */
+/* CSS cho modal 8 */
+#modal1 .modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 100%;
+    max-width: 900px;
+    border-radius: 5px;
+    position: relative;
+    animation: rise 0.2s cubic-bezier(0.42, 0, 0.58, 1) forwards;
+
+
+}
+
+#modal1 .content-container-building {
+    flex-wrap: wrap;
+    gap: 10px;
+    /* Khoảng cách giữa các div */
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+}
+#modal5 .modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 100%;
+    max-width: 550px;
+    border-radius: 5px;
+    position: relative;
+    animation: rise 0.2s cubic-bezier(0.42, 0, 0.58, 1) forwards;
+
+
+}
+
+#modal5 .content-container-building {
+    flex-wrap: wrap;
+    gap: 10px;
+    /* Khoảng cách giữa các div */
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+#modal2 .modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 100%;
+    max-width: 550px;
+    border-radius: 5px;
+    position: relative;
+    animation: rise 0.2s cubic-bezier(0.42, 0, 0.58, 1) forwards;
+
+
+}
+
+#modal2 .content-container-building {
+    flex-wrap: wrap;
+    gap: 10px;
+    /* Khoảng cách giữa các div */
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+#modal4 .modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 100%;
+    max-width: 1250px;
+    border-radius: 5px;
+    position: relative;
+    animation: rise 0.2s cubic-bezier(0.42, 0, 0.58, 1) forwards;
+
+
+}
+
+#modal4 .content-container-building {
+    flex-wrap: wrap;
+    gap: 10px;
+    /* Khoảng cách giữa các div */
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+}
+#DetailModal .content-container-building {
+    grid-template-columns: repeat(13, 1fr);
+    flex-wrap: wrap;
+        gap: 10px;
+        /* Khoảng cách giữa các div */
+        padding: 10px;
+        display: grid;
+}
+#DetailModal .modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 100%;
+    max-width: 1430px;
+    border-radius: 5px;
+    position: relative;
+    animation: rise 0.2s cubic-bezier(0.42, 0, 0.58, 1) forwards;
+
+
+}
+
+
+
+
+
+
+
+#DetailModal .data-square {
+    width: 95px;
+    /* Độ rộng và chiều cao của hình vuông */
+    height: 115px;
+    border: 2px solid #16a085;
+    /* Viền xung quanh hình vuông */
+    border-radius: 5px;
+    /* Bo tròn các góc */
+    padding: 10px;
+    box-shadow: 4px 4px #7f8c8d;
+    /* Đổ bóng cho hình vuông */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+/* Định dạng mỗi div hình vuông */
+.data-square {
+    width: 138px;
+    /* Độ rộng và chiều cao của hình vuông */
+    height: 50px;
+    border: 2px solid #16a085;
+    /* Viền xung quanh hình vuông */
+    border-radius: 5px;
+    /* Bo tròn các góc */
+    padding: 10px;
+    box-shadow: 4px 4px #7f8c8d;
+    /* Đổ bóng cho hình vuông */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 0.7em;
+    font-weight: bold;
+}
+/* Định dạng riêng cho modal9 */
+.modal9-square {
+    width: 50px;
+    /* Độ rộng và chiều cao của hình vuông */
+    height: 100px;
+    border: 2px solid #16a085;
+    /* Viền xung quanh hình vuông */
+    border-radius: 5px;
+    /* Bo tròn các góc */
+    padding: 10px;
+    box-shadow: 4px 4px #7f8c8d;
+    /* Đổ bóng cho hình vuông */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+/* Định dạng nội dung trong hình vuông */
+.location-code,
+.total-building {
+    margin: 5px 0;
+    font-size: 1em;
+}
+
+/* Hiệu ứng khi hover vào hình vuông */
+.data-square:hover {
+    background-color: #bdc3c7;
+    /* Màu nền khi hover */
+    border-color: #8e44ad;
+    /* Màu viền khi hover */
+    box-shadow: 4px 4px #7f8c8d;
+    /* Đổ bóng khi hover */
+    transform: scale(1.05);
+    /* Phóng to nhẹ khi hover */
+}
+
+.note {
+    display: flex;
+    justify-content: space-around;
+
+    flex-wrap: wrap;
+}
+
+.note-off {
+    color: #d0dad4;
+}
+
+.note-on {
+    color: #2ecc71;
+    text-align: center;
+}
+
+.note-error {
+    color: #e74c3c;
+    text-align: center;
+}
+
+.note-repair {
+    color: #f1c40f;
+    text-align: center;
+}
+
+.note-search {
+    color: #17a3b8;
+    text-align: center;
+}
+
+
+.blink {
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        border: 2px solid red;
+    }
+
+    50% {
+        border: 2px solid transparent;
+    }
+}
+
+/*  modal table */
+/* Nội dung của modal */
+.modal-content-table {
+    background-color: #fefefe;
+    margin: 15% auto;
+    /* Căn giữa modal */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 60%;
+    /* Chiều rộng của modal */
+}
+
+
+/* Bảng trong modal */
+.detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.detail-table th,
+.detail-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    color: black;
+    
+}
+
+.detail-table th  {
+    background-color: #f2f2f2;
+    color: black;
+}
+
+
+.detail-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+    /* font: 1.5em sans-serif; */
+}
+
+.detail-table tr:hover {
+    background-color: #ddd;
+    /* Nền sáng khi hover */
+}
+
+.update-button {
+    background-color: #3498db;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.update-button:hover {
+    background-color: #2980b9;
+}
+.detail-table select{width: 100%;
+    text-align: center;}
+
+.update-all-button{
+    background-color: #3498db;
+        color: white;
+        padding: 5px 10px;
+        border: none;
+        cursor: pointer;
+}
+
+
+
+
+
+/* Grid layout for details */
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* Table styling */
+.details-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.details-table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    color: #020202;
+}
+
+.details-table td:first-child {
+    font-weight: bold;
+    width: 30%;
+    background-color: #f9f9f9;
+}
+
+.details-table td:last-child {
+    width: 70%;
+}
+
+/* Optional styling for table rows */
+.details-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+
+
+
+.zone-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.zone-title {
+    flex: 1;
+    text-align: center;
+    font-weight: bold;
+}
+

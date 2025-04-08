@@ -1,0 +1,10 @@
+.footer{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 50px;
+  padding: 0 10px;
+  color: black;
+}
+.footer h3,a{
+  margin: 0px;
+}

@@ -1,0 +1,192 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 20px;
+}
+
+.main {
+    margin: 0 auto; /* Giữa trang */    
+    margin-top: 66px;
+}
+
+.upload-container {
+    display: flex; /* Chế độ Flex */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    justify-content: center; /* Căn trái theo chiều ngang */
+    margin-bottom: 20px; /* Khoảng cách dưới */
+    gap: 20px; /* Khoảng cách giữa các phần tử */
+}
+
+input[type="file"] {
+    padding: 10px; /* Đệm cho input */
+    border: 1px solid #ccc; /* Viền */
+    border-radius: 4px; /* Bo góc */
+    font-size: 16px; /* Kích thước chữ */
+    transition: border-color 0.3s; /* Hiệu ứng chuyển đổi */
+}
+
+input[type="file"]:focus {
+    border-color: #17A2B8; /* Màu viền khi focus */
+}
+
+button {
+    padding: 10px; /* Đệm cho nút */
+    background-color: #17A2B8; /* Màu nền nút */
+    color: white; /* Màu chữ */
+    border: none; /* Không có viền */
+    border-radius: 4px; /* Bo góc */
+    font-size: 16px; /* Kích thước chữ */
+    cursor: pointer; /* Con trỏ chuột thành tay */
+    transition: background-color 0.3s; /* Hiệu ứng chuyển đổi */
+}
+
+button:hover {
+    background-color: #0adbfc; /* Màu nền khi hover */
+}
+
+input[type="text"], 
+input[type="date"] {
+    padding: 10px; /* Đệm cho input */
+    border: 1px solid #ccc; /* Viền */
+    border-radius: 4px; /* Bo góc */
+    font-size: 16px; /* Kích thước chữ */
+    transition: border-color 0.3s; /* Hiệu ứng chuyển đổi */
+}
+
+input[type="text"]:focus, 
+input[type="date"]:focus {
+    border-color: #17A2B8; /* Màu viền khi focus */
+}
+
+.main_table {
+    margin-left: 200px;
+    padding: 5px;
+}
+
+.search-container {
+    margin-bottom: 20px;
+}
+
+.search-container h2 {
+    margin-bottom: 10px;
+}
+
+label {
+    font-weight: bold;
+}
+
+input[type="checkbox"] {
+    margin-left: 10px;
+}
+
+.results-container {
+    margin-left: 200px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.results-container h2 {
+    margin-bottom: 15px;
+    font-size: 24px;
+    color: #333;
+}
+
+#resultsTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+#resultsTable th, 
+#resultsTable td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+#resultsTable th {
+    background-color: #17A2B8 !important;
+    color: #fff;
+}
+
+#resultsTable tr:hover {
+    background-color: #f1f1f1;
+}
+
+
+
+.checkbox-group {
+   
+    padding: 15px; /* Đệm cho nội dung */
+}
+
+.checkbox-group h3 {
+    margin-bottom: 15px; /* Khoảng cách dưới tiêu đề */
+    font-size: 18px; /* Kích thước chữ tiêu đề */
+    color: #333; /* Màu chữ tiêu đề */
+}
+
+.checkbox-item {
+    display: flex; /* Sử dụng Flexbox cho các phần tử */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    margin-bottom: 10px; /* Khoảng cách giữa các checkbox */
+}
+
+.checkbox-item input[type="checkbox"] {
+    margin-right: 10px; /* Khoảng cách bên phải cho checkbox */
+}
+.check-label{
+    padding-top: 10px !important;
+}
+
+
+input[type="text"],
+input[type="date"] {
+    width: 100%; /* Chiều rộng 100% để tự động điều chỉnh theo container */
+    max-width: 250px; /* Giới hạn chiều rộng tối đa */
+    padding: 10px; /* Đệm cho input */
+    border: 1px solid #ccc; /* Viền */
+    border-radius: 4px; /* Bo góc */
+    font-size: 16px; /* Kích thước chữ */
+    box-sizing: border-box; /* Bao gồm padding và border trong tổng chiều rộng */
+    height: 50px;
+}
+
+label {
+    display: block; /* Đặt label thành block để có không gian riêng */
+    margin-bottom: 5px; /* Khoảng cách dưới label */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.results-container {
+    max-height: 400px; /* Giới hạn chiều cao tối đa */
+    overflow-y: auto; /* Cho phép cuộn theo chiều dọc */
+    border: 1px solid #ccc; /* Viền cho container */
+    border-radius: 5px; /* Bo góc */
+    background-color: #f9f9f9; /* Màu nền */
+}
+
+#resultsTable {
+    width: 100%;
+    border-collapse: collapse; /* Gộp viền */
+}
+
+#resultsTable th, 
+#resultsTable td {
+    border: 1px solid #ddd; /* Viền cho ô */
+    padding: 10px; /* Đệm cho ô */
+    text-align: left; /* Căn trái nội dung */
+}

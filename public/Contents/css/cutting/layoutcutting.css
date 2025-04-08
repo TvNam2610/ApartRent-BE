@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+*{
+margin: 0;
+padding: 0;
+box-sizing:border-box;
+text-decoration: none;
+font-family: 'Poppins', sans-serif;
+font-size: 1.2em;
+}
+.navbar {
+    
+    padding: 15px; /* Khoảng cách bên trong */
+}
+
+.nav-links {
+    list-style-type: none; /* Loại bỏ dấu chấm */
+    display: flex; /* Sắp xếp theo chiều ngang */
+    justify-content: space-around; /* Phân bổ khoảng cách đều */
+    margin: 0; /* Loại bỏ khoảng cách mặc định */
+    padding-top: 15px; /* Loại bỏ khoảng cách bên trong */
+}
+
+.nav-links li {
+   
+    text-align: center; /* Canh giữa nội dung */
+}
+
+.nav-links a {
+    text-decoration: none; /* Loại bỏ gạch chân */
+    color: white; /* Màu chữ */
+    padding: 10px 15px; /* Khoảng cách bên trong cho các liên kết */
+    transition: all 0.3s ease; /* Hiệu ứng chuyển màu nền */
+    display: block; /* Biến liên kết thành block để dễ dàng canh giữa */
+
+}
+
+.nav-links a:hover {
+    background-color: rgba(255, 255, 255, 0.411); /* Màu nền khi di chuột qua */
+    border-radius: 5px; /* Bo góc cho liên kết */
+    transform: translateY(-3px);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 
+hiệu ứng load */
+/* Style cho modal */
+#loadingModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Màu nền mờ */
+    z-index: 9999;
+    /* Đặt z-index cao để hiển thị trên tất cả các phần khác */
+}
+
+/* Style cho spinner */
+.spinner {
+    border: 16px solid #f3f3f3;
+    /* Màu nền */
+    border-top: 16px solid #3498db;
+    /* Màu của phần quay */
+    border-radius: 50%;
+    width: 60px;
+    /* Đường kính */
+    height: 60px;
+    /* Đường kính */
+    animation: spin 2s linear infinite;
+    /* Chạy animation */
+}
+
+/* Animation cho spinner */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

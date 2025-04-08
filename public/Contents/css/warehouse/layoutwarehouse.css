@@ -1,0 +1,46 @@
+.navbar {
+
+    padding: 15px;
+    /* Khoảng cách bên trong */
+}
+
+.nav-links {
+    list-style-type: none;
+    /* Loại bỏ dấu chấm */
+    display: flex;
+    /* Sắp xếp theo chiều ngang */
+    justify-content: space-around;
+    /* Phân bổ khoảng cách đều */
+    margin: 0;
+    /* Loại bỏ khoảng cách mặc định */
+    padding-top: 15px;
+    /* Loại bỏ khoảng cách bên trong */
+}
+
+.nav-links li {
+
+    text-align: center;
+    /* Canh giữa nội dung */
+}
+
+.nav-links a {
+    text-decoration: none;
+    /* Loại bỏ gạch chân */
+    color: white;
+    /* Màu chữ */
+    padding: 10px 15px;
+    /* Khoảng cách bên trong cho các liên kết */
+    transition: background-color 0.3s;
+    /* Hiệu ứng chuyển màu nền */
+    display: block;
+    /* Biến liên kết thành block để dễ dàng canh giữa */
+    font-size: 0.7em;
+
+}
+
+.nav-links a:hover {
+    background-color: rgba(255, 255, 255, 0.411);
+    /* Màu nền khi di chuột qua */
+    border-radius: 5px;
+    /* Bo góc cho liên kết */
+}

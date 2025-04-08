@@ -1,0 +1,16 @@
+
+.upload-container {
+    display: flex;
+}
+/* Container for pagination */
+.pagination {
+    display: flex !important;
+    justify-content: center;
+    /* Center the pagination */
+    align-items: center;
+    /* Align items vertically */
+    margin-top: 20px;
+    /* Add margin at the top */
+    font-family: Arial, sans-serif;
+    /* Font style */
+}

@@ -1,0 +1,264 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 20px;
+}
+
+.main {
+   
+    margin: 0 auto; /* Giữa trang */    
+    margin-top: 66px;
+}
+.main_content{
+    padding-top: 0px !important;
+}
+
+/* Sử dụng Flexbox để tạo hàng */
+.upload-container {
+    display: flex; /* Chế độ Flex */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    margin-bottom: 20px; /* Khoảng cách dưới */
+}
+
+input[type="file"] {
+    padding: 10px; /* Đệm cho input */
+    border: 1px solid #ccc; /* Viền */
+    border-radius: 4px; /* Bo góc */
+    font-size: 16px; /* Kích thước chữ */
+    transition: border-color 0.3s; /* Hiệu ứng chuyển đổi */
+    margin-right: 10px; /* Khoảng cách bên phải */
+}
+
+input[type="file"]:focus {
+    border-color: #17A2B8; /* Màu viền khi focus */
+}
+
+button {
+    padding: 10px; /* Đệm cho nút */
+    background-color: #17A2B8; /* Màu nền nút */
+    color: white; /* Màu chữ */
+    border: none; /* Không có viền */
+    border-radius: 4px; /* Bo góc */
+    font-size: 16px; /* Kích thước chữ */
+    cursor: pointer; /* Con trỏ chuột thành tay */
+    transition: background-color 0.3s; /* Hiệu ứng chuyển đổi */
+}
+
+button:hover {
+    background-color: #0adbfc; /* Màu nền khi hover */
+}
+.pagination {
+    display: flex !important;
+    justify-content: center ; /* Căn giữa các nút phân trang */
+}
+
+
+
+.pagination a {
+    display: inline-block; /* Hiển thị các nút phân trang như khối */
+    padding: 10px 15px; /* Khoảng cách bên trong các nút */
+    margin: 0 5px; /* Khoảng cách giữa các nút */
+    border: 1px solid #007bff; /* Đường viền */
+    border-radius: 5px; /* Bo góc */
+    color: #007bff; /* Màu chữ */
+    text-decoration: none; /* Bỏ gạch chân */
+    transition: background-color 0.3s, color 0.3s; /* Hiệu ứng chuyển màu */
+}
+
+.pagination a:hover {
+    background-color: #007bff; /* Màu nền khi hover */
+    color: white; /* Màu chữ khi hover */
+}
+
+.pagination a.active {
+    background-color: #007bff; /* Màu nền cho nút đang hoạt động */
+    color: white; /* Màu chữ cho nút đang hoạt động */
+    border: 1px solid #007bff; /* Đường viền cho nút đang hoạt động */
+}
+
+
+
+
+/* Căn giữa nội dung trong tất cả các ô của bảng */
+table {
+    width: 100%; /* Hoặc kích thước bạn mong muốn */
+    border-collapse: collapse; /* Gộp các đường biên của ô */
+}
+
+td {
+    text-align: center !important; /* Căn giữa theo chiều ngang */
+    vertical-align: middle !important; /* Căn giữa theo chiều dọc */
+    padding: 10px; /* Thêm khoảng cách giữa nội dung và biên ô */
+    border: 1px solid #ddd; /* Thêm đường viền cho ô */
+    font-weight: bold;
+}
+
+/* Nếu muốn căn giữa cho tiêu đề của bảng */
+th {
+    text-align: center !important; /* Căn giữa theo chiều ngang */
+    vertical-align: middle !important; /* Căn giữa theo chiều dọc */
+    padding: 10px; /* Thêm khoảng cách giữa nội dung và biên ô */
+    background-color: #17A2B8 !important; /* Màu nền cho tiêu đề */
+}
+
+
+
+/* .blink {
+    animation: blink-animation 1s steps(5, start) infinite;
+}
+
+@keyframes blink-animation {
+    to {
+        visibility: hidden;
+    }
+} */
+
+
+
+.download-container {
+    padding: 15px;
+}
+
+.download-container button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4caf4fd7; /* Màu xanh lá cây */
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.download-container button:hover {
+    background-color: #06970d; /* Màu xanh lá cây đậm hơn khi hover */
+}
+
+.history-container {
+    margin: 20px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.history-container h4 {
+    margin-bottom: 15px;
+    font-size: 24px;
+    color: #333;
+}
+
+#downloadHistoryTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+#downloadHistoryTable th, 
+#downloadHistoryTable td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+#downloadHistoryTable th {
+    background-color: #17A2B8 !important;
+    color: #333;
+}
+
+#downloadHistoryTable tr:hover {
+    background-color: #f1f1f1;
+}
+
+
+
+
+.card-header {
+    display: flex;
+    justify-content: space-between; /* Căn đều hai bên */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    padding: 10px; /* Tăng padding để tạo không gian thoáng hơn */
+    background-color: #f7f7f7; /* Thêm màu nền để phân biệt phần tiêu đề */
+    border-bottom: 2px solid #dee2e6; /* Thêm đường viền dưới để tạo sự phân chia */
+}
+
+.card-title {
+    margin: 0; /* Đảm bảo không có khoảng trắng dư */
+    font-size: 1.5rem; /* Tăng kích thước font để nổi bật hơn */
+    font-weight: bold; /* Đậm chữ để thu hút sự chú ý */
+    color: #333; /* Màu chữ tối cho độ tương phản tốt */
+}
+
+.card-tools {
+    display: flex;
+    align-items: center; /* Căn giữa nhãn và select theo chiều dọc */
+}
+
+.card-tools label {
+    margin-right: 10px; /* Khoảng cách giữa nhãn và select */
+    font-weight: 500; /* Đậm chữ để dễ đọc hơn */
+}
+
+.card-tools select {
+    padding: 5px; /* Thêm padding để tạo không gian cho các mục chọn */
+    border: 1px solid #ced4da; /* Đường viền nhẹ cho select */
+    border-radius: 4px; /* Bo góc cho select */
+    font-size: 1rem; /* Kích thước font cho select */
+    margin-right: 20px; /* Khoảng cách giữa select và checkbox */
+}
+
+.card-tools input[type="checkbox"] {
+    margin-right: 5px; /* Khoảng cách giữa checkbox và nhãn */
+}
+
+.sort-asc::after {
+    content: ' ▲'; /* Biểu tượng cho ASC */
+}
+
+.sort-desc::after {
+    content: ' ▼'; /* Biểu tượng cho DESC */
+}
+
+
+
+
+
+
+.navbar {
+    
+    padding: 15px; /* Khoảng cách bên trong */
+}
+
+.nav-links {
+    list-style-type: none; /* Loại bỏ dấu chấm */
+    display: flex; /* Sắp xếp theo chiều ngang */
+    justify-content: space-around; /* Phân bổ khoảng cách đều */
+    margin: 0; /* Loại bỏ khoảng cách mặc định */
+    padding-top: 15px; /* Loại bỏ khoảng cách bên trong */
+}
+
+.nav-links li {
+   
+    text-align: center; /* Canh giữa nội dung */
+}
+
+.nav-links a {
+    text-decoration: none; /* Loại bỏ gạch chân */
+    color: white; /* Màu chữ */
+    padding: 10px 15px; /* Khoảng cách bên trong cho các liên kết */
+    transition: background-color 0.3s; /* Hiệu ứng chuyển màu nền */
+    display: block; /* Biến liên kết thành block để dễ dàng canh giữa */
+
+}
+
+.nav-links a:hover {
+    background-color: rgba(255, 255, 255, 0.411); /* Màu nền khi di chuột qua */
+    border-radius: 5px; /* Bo góc cho liên kết */
+}
+
+
+.card-tools select {
+    font-size: 1em;
+}
