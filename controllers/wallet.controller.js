@@ -1,11 +1,12 @@
-  import prisma from "../lib/prisma.js";
-  import PayOS from "@payos/node";
+//   import PayOS from "@payos/node";
+  import Database from "../database/database.js";// Nhập lớp Database để thực hiện truy vấn MySQL
+  const db = new Database(); // Khởi tạo đối tượng Database
 
-  const payos = new PayOS(
-    "c6b57cb6-fb39-45fa-95b9-f6ec9f918462",
-    "e46e9212-8bfb-4d29-84c0-d9c6ad0b22e4",
-    "1511e5de6ba5981080c614c789f20c6bf295a09fb7aa03dc4fbaf23178438aa4"
-  );
+//   const payos = new PayOS(
+//     "c6b57cb6-fb39-45fa-95b9-f6ec9f918462",
+//     "e46e9212-8bfb-4d29-84c0-d9c6ad0b22e4",
+//     "1511e5de6ba5981080c614c789f20c6bf295a09fb7aa03dc4fbaf23178438aa4"
+//   );
 
   // API để nạp tiền vào ví (tạo link thanh toán)
   // export const depositToWallet = async (req, res) => {
@@ -81,37 +82,59 @@
   // };
   
 
-  // API để lấy thông tin ví của người dùng
+// API để lấy thông tin ví của người dùng
 export const getWallet = async (req, res) => {
-      const { userId } = req.params;
-    
-      try {
+    const { userId } = req.query;
+
+    const query = `
+        SELECT * FROM wallet WHERE userId = ?
+    `;
+    try {
         // Kiểm tra userId có tồn tại không
         if (!userId) {
           return res.status(400).json({ message: "userId is required." });
         }
     
-        // Lấy thông tin ví từ cơ sở dữ liệu
-        const wallet = await prisma.wallet.findUnique({
-          where: { userId },
-        });
+        const result = await db.executeQueryAsyncDB(query, [userId])
+        res.status(200).json(result)
+    } catch (error) {
+    console.error("Error fetching wallet:", error);
+    res.status(500).json({ message: "Failed to fetch wallet." });
+    }
+};
     
-        // Kiểm tra ví có tồn tại không
-        if (!wallet) {
-          return res.status(404).json({ message: "Wallet not found." });
-        }
-    
-        // Trả lại thông tin ví
-        res.status(200).json({
-          success: true,
-          data: wallet,
-        });
-      } catch (error) {
-        console.error("Error fetching wallet:", error);
-        res.status(500).json({ message: "Failed to fetch wallet." });
+//Trừ tiền ví 
+export const deductBalance = async (req, res) => {
+    const { userId, balance } = req.body;
+  
+    if (!userId || !balance) {
+      return res.status(400).json({ message: "userId và balance là bắt buộc." });
+    }
+  
+    try {
+      // 1. Lấy số dư hiện tại
+      const selectQuery = `SELECT balance FROM wallet WHERE userId = ?`;
+      const wallet = await db.executeQueryAsyncDB(selectQuery, [userId]);
+  
+      if (!wallet) {
+        return res.status(404).json({ message: "Không tìm thấy ví." });
       }
-    };
-    
+  
+      if (wallet.balance < balance) {
+        return res.status(400).json({ message: "Số dư không đủ." });
+      }
+  
+      // 2. Cập nhật số dư mới
+      const updateQuery = `UPDATE wallet SET balance = balance - ? WHERE userId = ?`;
+      await db.executeQueryAsyncDB(updateQuery, [balance, userId]);
+  
+      return res.status(200).json({ message: "Trừ tiền thành công." });
+    } catch (error) {
+      console.error("Lỗi khi trừ tiền:", error);
+      return res.status(500).json({ message: "Lỗi server khi trừ tiền." });
+    }
+};
+  
 
     // export const depositToWallet = async (req, res) => {
     //   const { userId, amount } = req.body;
@@ -175,117 +198,117 @@ export const getWallet = async (req, res) => {
 //       }
 //     };
     
-export const depositToWallet = async (req, res) => {
-  const { userId, amount } = req.body;
+// export const depositToWallet = async (req, res) => {
+//   const { userId, amount } = req.body;
 
-  if (!userId || amount <= 0) {
-      return res.status(400).json({ message: "Invalid input data." });
-  }
+//   if (!userId || amount <= 0) {
+//       return res.status(400).json({ message: "Invalid input data." });
+//   }
 
-  try {
-      let wallet = await prisma.wallet.findUnique({
-          where: { userId },
-      });
+//   try {
+//       let wallet = await prisma.wallet.findUnique({
+//           where: { userId },
+//       });
 
-      if (!wallet) {
-          wallet = await prisma.wallet.create({
-              data: { userId },
-          });
-      }
+//       if (!wallet) {
+//           wallet = await prisma.wallet.create({
+//               data: { userId },
+//           });
+//       }
 
-      const order = {
-          amount,
-          description: `Nạp tiền ${userId}`.slice(0, 25),
-          orderCode: Date.now(),
-          returnUrl: `http://localhost:5173/callback?userId=${userId}&amount=${amount}`, // Frontend URL
-          cancelUrl: `http://localhost:5173/callback?userId=${userId}&amount=${amount}`, // Frontend URL
-      };
+//       const order = {
+//           amount,
+//           description: `Nạp tiền ${userId}`.slice(0, 25),
+//           orderCode: Date.now(),
+//           returnUrl: `http://localhost:5173/callback?userId=${userId}&amount=${amount}`, // Frontend URL
+//           cancelUrl: `http://localhost:5173/callback?userId=${userId}&amount=${amount}`, // Frontend URL
+//       };
 
-      const paymentLink = await payos.createPaymentLink(order);
+//       const paymentLink = await payos.createPaymentLink(order);
 
-      res.status(201).json({
-          success: true,
-          paymentUrl: paymentLink.checkoutUrl,
-      });
-  } catch (error) {
-      console.error("Error creating deposit payment:", error);
-      res.status(500).json({ message: "Failed to create deposit payment." });
-  }
-};
-export const handleCallback = async (req, res) => {
-  const { userId, amount, status } = req.query;
+//       res.status(201).json({
+//           success: true,
+//           paymentUrl: paymentLink.checkoutUrl,
+//       });
+//   } catch (error) {
+//       console.error("Error creating deposit payment:", error);
+//       res.status(500).json({ message: "Failed to create deposit payment." });
+//   }
+// };
+// export const handleCallback = async (req, res) => {
+//   const { userId, amount, status } = req.query;
 
-  if (!userId || !amount || !status) {
-      return res.status(400).json({ message: "Invalid callback data." });
-  }
+//   if (!userId || !amount || !status) {
+//       return res.status(400).json({ message: "Invalid callback data." });
+//   }
 
-  try {
-      let wallet = await prisma.wallet.findUnique({
-          where: { userId },
-      });
+//   try {
+//       let wallet = await prisma.wallet.findUnique({
+//           where: { userId },
+//       });
 
-      if (!wallet) {
-          return res.status(404).json({ message: "Wallet not found." });
-      }
+//       if (!wallet) {
+//           return res.status(404).json({ message: "Wallet not found." });
+//       }
 
-      console.log("Current wallet balance:", wallet.balance);
-      console.log("Status:", status);
-      // Cập nhật số dư ví nếu thanh toán thành công
-      if (status === 'PAID') {
-          wallet.balance += parseFloat(amount);
-          await prisma.wallet.update({
-              where: { userId },
-              data: { balance: wallet.balance },
-          });
-          console.log("Updated wallet balance:", wallet.balance);
-          return res.status(200).json({ message: "Payment successful." });
-      } else {
-          return res.status(200).json({ message: "Payment failed." });
-      }
-  } catch (error) {
-      console.error("Error handling callback:", error);
-      return res.status(500).json({ message: "Error processing callback." });
-  }
-};
+//       console.log("Current wallet balance:", wallet.balance);
+//       console.log("Status:", status);
+//       // Cập nhật số dư ví nếu thanh toán thành công
+//       if (status === 'PAID') {
+//           wallet.balance += parseFloat(amount);
+//           await prisma.wallet.update({
+//               where: { userId },
+//               data: { balance: wallet.balance },
+//           });
+//           console.log("Updated wallet balance:", wallet.balance);
+//           return res.status(200).json({ message: "Payment successful." });
+//       } else {
+//           return res.status(200).json({ message: "Payment failed." });
+//       }
+//   } catch (error) {
+//       console.error("Error handling callback:", error);
+//       return res.status(500).json({ message: "Error processing callback." });
+//   }
+// };
 
-export const updateWallet = async (req, res) => {
-  const { userId, amount } = req.body;
+// export const updateWallet = async (req, res) => {
+//   const { userId, amount } = req.body;
 
-  try {
-      // Kiểm tra nếu user tồn tại
-      const user = await prisma.user.findUnique({
-          where: { id: userId },
-          include: { wallet: true },
-      });
+//   try {
+//       // Kiểm tra nếu user tồn tại
+//       const user = await prisma.user.findUnique({
+//           where: { id: userId },
+//           include: { wallet: true },
+//       });
 
-      if (!user) {
-          return res.status(404).send({ message: 'User not found' });
-      }
+//       if (!user) {
+//           return res.status(404).send({ message: 'User not found' });
+//       }
 
-      if (!user.wallet) {
-          return res.status(400).send({ message: 'User does not have a wallet' });
-      }
+//       if (!user.wallet) {
+//           return res.status(400).send({ message: 'User does not have a wallet' });
+//       }
 
-      // Tính số dư mới
-      const newBalance = user.wallet.balance - amount;
+//       // Tính số dư mới
+//       const newBalance = user.wallet.balance - amount;
 
-      // Kiểm tra số dư có đủ không
-      if (newBalance < 0) {
-          return res.status(400).send({ message: 'Insufficient wallet balance' });
-      }
+//       // Kiểm tra số dư có đủ không
+//       if (newBalance < 0) {
+//           return res.status(400).send({ message: 'Insufficient wallet balance' });
+//       }
 
-      // Cập nhật số dư trong ví
-      const updatedWallet = await prisma.wallet.update({
-          where: { id: user.wallet.id },
-          data: { balance: newBalance },
-      });
+//       // Cập nhật số dư trong ví
+//       const updatedWallet = await prisma.wallet.update({
+//           where: { id: user.wallet.id },
+//           data: { balance: newBalance },
+//       });
 
-      res.status(200).send({
-          message: 'Wallet updated successfully',
-          walletBalance: updatedWallet.balance,
-      });
-  } catch (error) {
-      console.error('Error updating wallet:', error);
-      res.status(500).send({ message: 'Failed to update wallet' });
-  }
-};
+//       res.status(200).send({
+//           message: 'Wallet updated successfully',
+//           walletBalance: updatedWallet.balance,
+//       });
+//   } catch (error) {
+//       console.error('Error updating wallet:', error);
+//       res.status(500).send({ message: 'Failed to update wallet' });
+//   }
+// };

@@ -12,11 +12,13 @@ import upload from './middleware/multer.js';
 import adminRoute from './routes/admin/dashboard.route.js'
 import postRoute from './routes/post.route.js';
 import authRoute from "./routes/auth.route.js"
+import packageRoute from './routes/package.route.js'
 // import testRoute from "./routes/test.route.js"
 // import userRoute from "./routes/user.route.js"
 // import favoriteRoute from "./routes/favorite.route.js"
 // import vnpayRoute from "./routes/vnpay.route.js"
-// import walletRoute from "./routes/wallet.route.js"
+import walletRoute from "./routes/wallet.route.js"
+import transactionRoute from "./routes/transaction.route.js"
 // import chatRoute from "./routes/chat.route.js"
 // import messageRoute from "./routes/message.route.js"
 
@@ -57,9 +59,11 @@ app.use("/api/auth", authRoute)
 // app.use("/api/users", userRoute)
 // app.use("/api/test", testRoute)
 app.use("/api/posts", postRoute)
+app.use("/api/package", packageRoute)
 // app.use("/api/favorite", favoriteRoute)
 // app.use("/api/vnpay", vnpayRoute)
-// app.use('/api/wallet', walletRoute);
+app.use('/api/wallet', walletRoute);
+app.use('/api/transaction', transactionRoute);
 // app.use('/api/chat', chatRoute);
 // app.use('/api/message', messageRoute);
 

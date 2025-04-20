@@ -2,6 +2,143 @@ import Database from "../database/database.js";// Nhập lớp Database để th
 const db = new Database(); // Khởi tạo đối tượng Database
 import cloudinary from "../utils/cloudinary.js";
 
+//get post by user
+// controllers/post.controller.js
+
+export const getPostsByUser = async (req, res) => {
+  const { id } = req.params;
+  const {
+    keyword = '',
+    status = '',
+    packageType = '',
+    page = 1,
+    limit = 10
+  } = req.query;
+
+  const offset = (page - 1) * limit;
+
+  try {
+    // Xây dựng điều kiện lọc động
+    let whereClauses = ['p.userId = ?'];
+    const params = [id];
+
+    if (keyword) {
+      whereClauses.push('(p.title LIKE ? OR r.location LIKE ?)');
+      params.push(`%${keyword}%`, `%${keyword}%`);
+    }
+
+    if (status) {
+      whereClauses.push('p.status = ?');
+      params.push(status);
+    }
+
+    if (packageType) {
+      whereClauses.push('pk.type = ?');
+      params.push(packageType);
+    }
+
+    const whereSQL = whereClauses.length ? `WHERE ${whereClauses.join(' AND ')}` : '';
+
+    // Lấy dữ liệu bài đăng
+    const posts = await db.executeQueryAsyncDB(`
+      SELECT 
+        p.id, p.title, p.status,
+        pk.type AS packageType, pk.price AS amount,
+        p.startDate, r.location,
+        (SELECT imageUrl FROM post_image WHERE postId = p.id LIMIT 1) AS thumbnail
+      FROM post p
+      JOIN real_estate r ON p.realEstateId = r.id
+      JOIN package pk ON p.packageId = pk.id
+      ${whereSQL}
+      ORDER BY p.createAt DESC
+      LIMIT ? OFFSET ?
+    `, [...params, parseInt(limit), parseInt(offset)]);
+
+    // Lấy tổng số bài để phân trang
+    const [countResult] = await db.executeQueryAsyncDB(`
+      SELECT COUNT(*) as total
+      FROM post p
+      JOIN real_estate r ON p.realEstateId = r.id
+      JOIN package pk ON p.packageId = pk.id
+      ${whereSQL}
+    `, params);
+
+    res.status(200).json({
+      posts,
+      total: countResult.total,
+    });
+  } catch (err) {
+    console.error('Lỗi lấy bài đăng:', err);
+    res.status(500).json({ message: 'Lỗi server khi lấy bài đăng' });
+  }
+};
+
+
+
+//Tạo bài đăng
+export const createPost = async (req, res) => {
+  const {
+    title,
+    content,
+    description,
+    price,
+    location,
+    status = "PENDING",
+    bedrooms,
+    bathrooms,
+    area,
+    floor,
+    features,
+    images,        // array url từ Cloudinary
+    userId,
+    packageId,
+    startDate,
+    days,
+    contactName,
+    phone,
+    email,
+    clickCount,
+    guestCount,
+    type
+  } = req.body;
+
+  try {
+    // 1. Tạo real_estate
+    const realEstateResult = await db.executeQueryAsyncDB(
+      `INSERT INTO real_estate (description, price, location, status, bedrooms, bathrooms, area, floor, features)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [description, price, location, type, bedrooms, bathrooms, area, floor, features]    
+    );
+    const realEstateId = realEstateResult.insertId;
+
+    // 2. Tạo post
+    const postResult = await db.executeQueryAsyncDB(
+      `INSERT INTO post (title, content, status, createAt, realEstateId, userId, packageId, startDate, endDate, clickCount, guestCount, dayCount, contactName, phone,email)
+       VALUES (?, ?, ?, NOW(), ?, ?, ?, ?, DATE_ADD(?, INTERVAL ? DAY), ?, ?, ?, ?,?,?)`,
+      [title, content,status, realEstateId, userId, packageId, startDate, startDate, days, clickCount || 0, guestCount || 0, days,contactName,phone,email]
+    );
+    const postId = postResult.insertId;
+
+    // 3. Lưu ảnh vào post_image
+    if (Array.isArray(images) && images.length > 0) {
+      // dùng multiple value insert
+      const insertImagesQuery = `
+        INSERT INTO post_image (postId, imageUrl) VALUES ${images
+          .map(() => '(?, ?)')
+          .join(', ')}
+      `;
+      const imageValues = images.flatMap((url) => [postId, url]);
+
+      await db.executeQueryAsyncDB(insertImagesQuery, imageValues);
+    }
+
+    return res.status(201).json({ success: true, message: 'Tạo bài đăng thành công', postId });
+  } catch (err) {
+    console.error('Lỗi khi tạo bài đăng:', err);
+    return res.status(500).json({ success: false, message: 'Lỗi hệ thống khi tạo bài đăng' });
+  }
+};
+
 
 // Lấy tất cả bài đăng với phân trang và bộ lọc
 export const getPosts = async (req, res) => {
@@ -187,23 +324,25 @@ export const addPost = async (req, res) => {
 // Cập nhật bài đăng
 export const updatePost = async (req, res) => {
   const { id } = req.params;
-  const { title, description } = req.body;
-
-  const query = `
-    UPDATE post
-    SET title = ?, description = ?
-    WHERE id = ?
-  `;
+  const {
+    title,
+    price,
+    location,
+    description
+  } = req.body;
 
   try {
-    const result = await db.executeNonQuery(query, [title, description, id]);
-    if (result === 0) {
-      return res.status(404).json({ message: 'Post not found' });
-    }
-    res.status(200).json({ message: 'Post updated successfully' });
+    await db.executeQueryAsyncDB(`
+      UPDATE post p
+      JOIN real_estate r ON p.realEstateId = r.id
+      SET p.title = ?, r.price = ?, r.location = ?, r.description = ?
+      WHERE p.id = ?
+    `, [title, price, location, description, id]);
+
+    res.status(200).json({ message: 'Cập nhật thành công' });
   } catch (err) {
-    console.error('Error updating post:', err);
-    res.status(500).json({ message: 'Failed to update post' });
+    console.error(err);
+    res.status(500).json({ message: 'Lỗi server' });
   }
 };
 
