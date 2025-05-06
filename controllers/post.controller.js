@@ -140,92 +140,96 @@ export const createPost = async (req, res) => {
 };
 
 
-// Lấy tất cả bài đăng với phân trang và bộ lọc
-export const getPosts = async (req, res) => {
+// lấy danh sách bài đăng phân trang
+export const getFilteredPosts = async (req, res) => {
   const {
-    page = 1,                // Trang hiện tại
-    limit = 10,              // Số bài đăng mỗi trang
-    postStatus,              // Trạng thái bài đăng (PENDING, APPROVED, REJECTED)
-    realEstateStatus,        // Trạng thái bất động sản (FOR_RENT, FOR_SALE)
-    minPrice,                // Giá tối thiểu
-    maxPrice,                // Giá tối đa
-    minArea,                 // Diện tích tối thiểu
-    maxArea,                 // Diện tích tối đa
-    searchQuery,             // Từ khóa tìm kiếm
-    bedrooms,                // Số phòng ngủ
+    searchQuery  = '',
+    realEstateStatus = '', // Lọc theo trạng thái bất động sản
+    minPrice = '',
+    maxPrice = '',
+    minArea = '',
+    maxArea = '',
+    bedrooms = '',
+    status = 'APPROVED', // Mặc định là 'APPROVED'
+    page = 1,
+    limit = 10,
   } = req.query;
 
-  const skip = (page - 1) * limit;  // Tính số bài đăng cần bỏ qua
-
-  // Tạo bộ lọc động cho câu truy vấn
-  const filters = {
-    status: postStatus || undefined,
-    realEstate: {
-      status: realEstateStatus || undefined,
-      price: {
-        gte: minPrice ? parseFloat(minPrice) : undefined,
-        lte: maxPrice ? parseFloat(maxPrice) : undefined,
-      },
-      area: {
-        gte: minArea ? parseFloat(minArea) : undefined,
-        lte: maxArea ? parseFloat(maxArea) : undefined,
-      },
-      bedrooms: bedrooms ? parseInt(bedrooms) : undefined,
-      location: searchQuery ? { contains: searchQuery, mode: 'insensitive' } : undefined,
-    },
-  };
+  const offset = (page - 1) * limit;
 
   try {
-    // Câu truy vấn để lấy bài đăng với bộ lọc và phân trang
-    const query = `
-      SELECT p.*, r.*, u.username, u.avatar
+    // Xây dựng điều kiện lọc động
+    let whereClauses = ['p.status = ?']; // Chỉ lọc bài đăng với status 'APPROVED'
+    const params = [status];
+
+    // Nếu có từ khóa tìm kiếm (tiêu đề hoặc địa điểm)
+    if (searchQuery) {
+      whereClauses.push('(p.title LIKE ? OR r.location LIKE ?)');
+      params.push(`%${searchQuery }%`, `%${searchQuery }%`);
+    }
+
+    // Nếu có trạng thái bất động sản
+    if (realEstateStatus) {
+      whereClauses.push('r.status = ?');
+      params.push(realEstateStatus);
+    }
+
+    // Nếu có khoảng giá (minPrice và maxPrice)
+    if (minPrice > 0 , maxPrice> 0 && maxPrice> minPrice) {
+      whereClauses.push('r.price BETWEEN ? AND ?');
+      params.push(minPrice, maxPrice);
+    }
+
+    // Nếu có khoảng diện tích (minArea và maxArea)
+    if (minArea > 0, maxArea>0 && maxArea> minArea) {
+      whereClauses.push('r.area BETWEEN ? AND ?');
+      params.push(minArea, maxArea);
+    }
+
+    // Nếu có số phòng ngủ (bedrooms)
+    if (bedrooms) {
+      whereClauses.push('r.bedrooms >= ?');
+      params.push(bedrooms);
+    }
+
+    // Tạo phần câu lệnh WHERE
+    const whereSQL = whereClauses.length ? `WHERE ${whereClauses.join(' AND ')}` : '';
+
+    // Lấy dữ liệu bài đăng với điều kiện lọc
+    const posts = await db.executeQueryAsyncDB(`
+      SELECT 
+        p.id, p.title, p.status,
+        pk.type AS packageType, pk.price AS amount,
+        p.startDate, r.location, r.price AS realEstatePrice,
+        r.bedrooms, r.bathrooms, r.area, r.floor, r.status AS realEstateStatus,
+        (SELECT imageUrl FROM post_image WHERE postId = p.id LIMIT 1) AS thumbnail
       FROM post p
       JOIN real_estate r ON p.realEstateId = r.id
-      JOIN user u ON p.userId = u.id
-      WHERE 1=1
-      ${filters.status ? `AND p.status = '${filters.status}'` : ''}
-      ${filters.realEstate.status ? `AND r.status = '${filters.realEstate.status}'` : ''}
-      ${filters.realEstate.price.gte ? `AND r.price >= ${filters.realEstate.price.gte}` : ''}
-      ${filters.realEstate.price.lte ? `AND r.price <= ${filters.realEstate.price.lte}` : ''}
-      ${filters.realEstate.area.gte ? `AND r.area >= ${filters.realEstate.area.gte}` : ''}
-      ${filters.realEstate.area.lte ? `AND r.area <= ${filters.realEstate.area.lte}` : ''}
-      ${filters.realEstate.bedrooms ? `AND r.bedrooms = ${filters.realEstate.bedrooms}` : ''}
-      ${filters.realEstate.location ? `AND r.location LIKE '%${filters.realEstate.location.contains}%'` : ''}
-      LIMIT ${skip}, ${limit}
-    `;
+      JOIN package pk ON p.packageId = pk.id
+      ${whereSQL}
+      ORDER BY p.createAt DESC
+      LIMIT ? OFFSET ?
+    `, [...params, parseInt(limit), parseInt(offset)]);
 
-    const posts = await db.executeQueryAsyncDB(query); // Sử dụng executeQueryAsyncDB để thực thi truy vấn
-
-    // Đếm tổng số bài đăng để hỗ trợ phân trang
-    const countQuery = `
-      SELECT COUNT(*) AS total 
+    // Lấy tổng số bài đăng để phân trang
+    const [countResult] = await db.executeQueryAsyncDB(`
+      SELECT COUNT(*) as total
       FROM post p
       JOIN real_estate r ON p.realEstateId = r.id
-      JOIN user u ON p.userId = u.id
-      WHERE 1=1
-      ${filters.status ? `AND p.status = '${filters.status}'` : ''}
-      ${filters.realEstate.status ? `AND r.status = '${filters.realEstate.status}'` : ''}
-      ${filters.realEstate.price.gte ? `AND r.price >= ${filters.realEstate.price.gte}` : ''}
-      ${filters.realEstate.price.lte ? `AND r.price <= ${filters.realEstate.price.lte}` : ''}
-      ${filters.realEstate.area.gte ? `AND r.area >= ${filters.realEstate.area.gte}` : ''}
-      ${filters.realEstate.area.lte ? `AND r.area <= ${filters.realEstate.area.lte}` : ''}
-      ${filters.realEstate.bedrooms ? `AND r.bedrooms = ${filters.realEstate.bedrooms}` : ''}
-      ${filters.realEstate.location ? `AND r.location LIKE '%${filters.realEstate.location.contains}%'` : ''}
-    `;
-    const totalCountResult = await db.executeQueryAsyncDB(countQuery);
-    const totalCount = totalCountResult[0]?.total || 0;
+      JOIN package pk ON p.packageId = pk.id
+      ${whereSQL}
+    `, params);
 
     res.status(200).json({
-      totalCount,
-      totalPages: Math.ceil(totalCount / limit),
-      currentPage: page,
       posts,
+      total: countResult.total,
     });
   } catch (err) {
-    console.error('Error fetching posts:', err);
-    res.status(500).json({ message: 'Failed to retrieve posts' });
+    console.error('Lỗi lấy bài đăng:', err);
+    res.status(500).json({ message: 'Lỗi server khi lấy bài đăng' });
   }
 };
+
 
 // Lấy bài đăng duy nhất theo ID
 export const getPost = async (req, res) => {
@@ -251,76 +255,27 @@ export const getPost = async (req, res) => {
   }
 };
 
-// Thêm bài đăng mới
-export const addPost = async (req, res) => {
-  const { title, content, realEstate, packageId } = req.body;
-  const userId = req.userId;  // Lấy userId từ token (đã được xác thực trước đó)
 
-  // Đảm bảo có ảnh trong req.files
-  if (!req.files || req.files.length === 0) {
-    return res.status(400).json({ message: "No images provided!" });
-  }
+// Lấy danh sách ảnh của bài đăng theo postId
+export const getPostImages = async (req, res) => {
+  const { postId } = req.params;
+
+  const query = `
+    SELECT id, imageUrl 
+    FROM post_image 
+    WHERE postId = ?
+  `;
 
   try {
-    // Upload ảnh lên Cloudinary và lấy URL
-    const imageUrls = await Promise.all(
-      req.files.map(async (file) => {
-        return new Promise((resolve, reject) => {
-          cloudinary.uploader.upload_stream(
-            { resource_type: "auto" },  // Tự động nhận diện loại file (image, video, ...)
-            (error, result) => {
-              if (error) reject(error);
-              resolve(result.secure_url); // Trả về URL ảnh đã upload
-            }
-          ).end(file.buffer);  // Kết thúc stream và upload ảnh
-        });
-      })
-    );
-
-    // Chuyển mảng URL ảnh thành chuỗi JSON
-    const imagesJson = JSON.stringify(imageUrls);
-
-    // Thêm bất động sản vào bảng real_estate
-    const realEstateQuery = `
-      INSERT INTO real_estate (description, price, location, status, bedrooms, bathrooms, area, floor, features, images)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `;
-
-    // Thực thi truy vấn để thêm bất động sản và lấy realEstateId mới
-    const realEstateId = await db.executeInsertReturnId(realEstateQuery, [
-      realEstate.description,
-      realEstate.price,
-      realEstate.location,
-      realEstate.status,
-      realEstate.bedrooms,
-      realEstate.bathrooms,
-      realEstate.area,
-      realEstate.floor,
-      JSON.stringify(realEstate.features),
-      imagesJson  // Lưu ảnh dưới dạng chuỗi JSON
-    ]);
-
-    // Thêm bài đăng mới vào bảng post
-    const postQuery = `
-      INSERT INTO post (title, content, status, userId, realEstateId, packageId, createAt)
-      VALUES (?, ?, ?, ?, ?, ?, NOW())
-    `;
-
-    const postId = await db.executeInsertReturnId(postQuery, [
-      title,
-      content,
-      'PENDING',  // Trạng thái bài đăng mặc định là 'PENDING'
-      userId,
-      realEstateId,
-      packageId,
-    ]);
-
-    res.status(200).json({ message: 'Post and real estate created successfully', postId });
+    const images = await db.executeQueryAsyncDB(query, [postId]);
+    res.status(200).json(images); // Trả về mảng ảnh
   } catch (err) {
-    console.error('Error adding post and real estate:', err);
-    res.status(500).json({ message: 'Failed to create post and real estate' });
+    console.error('Error fetching post images:', err);
+    res.status(500).json({ message: 'Failed to get post images' });
   }
 };
+
+
 // Cập nhật bài đăng
 export const updatePost = async (req, res) => {
   const { id } = req.params;
@@ -349,41 +304,67 @@ export const updatePost = async (req, res) => {
 // Xóa bài đăng
 export const deletePost = async (req, res) => {
   const { id } = req.params;
-  const userId = req.userId;
-
-  const query = `
-    DELETE FROM post
-    WHERE id = ? AND userId = ?
-  `;
 
   try {
-    const result = await db.executeNonQuery(query, [id, userId]);
-    if (result === 0) {
-      return res.status(404).json({ message: 'Post not found or not authorized' });
+    // 1. Lấy id bất động sản liên quan
+    const [postInfo] = await db.executeQueryAsyncDB(`SELECT realEstateId FROM post WHERE id = ?`, [id]);
+    const realEstateId = postInfo?.realEstateId;
+
+    if (!realEstateId) return res.status(404).json({ message: 'Không tìm thấy bài đăng hoặc real estate' });
+
+    // 2. Xoá hình ảnh liên quan
+    await db.executeQueryAsyncDB(`DELETE FROM post_image WHERE postId = ?`, [id]);
+
+    // 3. Xoá bài đăng
+    await db.executeQueryAsyncDB(`DELETE FROM post WHERE id = ?`, [id]);
+
+    // 4. Kiểm tra xem real estate có còn được dùng không
+    const [check] = await db.executeQueryAsyncDB(
+      `SELECT COUNT(*) AS count FROM post WHERE realEstateId = ?`,
+      [realEstateId]
+    );
+
+    if ((check?.count || 0) === 0) {
+      await db.executeQueryAsyncDB(`DELETE FROM real_estate WHERE id = ?`, [realEstateId]);
     }
-    res.status(200).json({ message: 'Post deleted successfully' });
+
+    res.status(200).json({ message: 'Xoá bài đăng thành công' });
   } catch (err) {
-    console.error('Error deleting post:', err);
-    res.status(500).json({ message: 'Failed to delete post' });
+    console.error(err);
+    res.status(500).json({ message: 'Lỗi server khi xoá bài đăng' });
   }
 };
 
-// Lưu bài đăng yêu thích
 export const savePost = async (req, res) => {
-  const { postId } = req.body;
-  const userId = req.userId;
-
-  const query = `
-    INSERT INTO favoriteList (userId, postId)
-    VALUES (?, ?)
-  `;
+  const { postId, userId } = req.body;
 
   try {
-    const result = await db.executeInsertReturnId(query, [userId, postId]);
-    res.status(200).json({ message: 'Post saved successfully' });
+    // Kiểm tra nếu bài viết đã được lưu
+    const [existing] = await db.executeQueryAsyncDB(
+      'SELECT * FROM favoritelist WHERE userId = ? AND postId = ?',
+      [userId, postId]
+    );
+
+    if (existing) {
+      // Nếu đã tồn tại, xóa khỏi danh sách yêu thích
+      await db.executeQueryAsyncDB(
+        'DELETE FROM favoritelist WHERE userId = ? AND postId = ?',
+        [userId, postId]
+      );
+      return res.status(200).json({ message: 'Đã xóa khỏi danh sách yêu thích' });
+    }
+
+    // Nếu chưa tồn tại, thêm vào danh sách yêu thích
+    await db.executeQueryAsyncDB(
+      'INSERT INTO favoritelist (userId, postId, createdAt) VALUES (?, ?, NOW())',
+      [userId, postId]
+    );
+
+    res.status(200).json({ message: 'Đã thêm vào danh sách yêu thích' });
+
   } catch (err) {
-    console.error('Error saving post:', err);
-    res.status(500).json({ message: 'Failed to save post' });
+    console.error('Lỗi khi xử lý yêu thích:', err);
+    res.status(500).json({ message: 'Có lỗi xảy ra khi lưu bài viết yêu thích' });
   }
 };
 
@@ -411,5 +392,52 @@ export const updatePostStatus = async (req, res) => {
   } catch (err) {
     console.error('Error updating post status:', err);
     res.status(500).json({ message: 'Failed to update post status' });
+  }
+};
+
+
+// GET /posts/favorites/:userId
+export const getFavoritePosts = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const posts = await db.executeQueryAsyncDB(
+      ` SELECT 
+        p.id, p.title, p.status,
+     
+        p.startDate, r.location, r.price AS realEstatePrice,
+        r.bedrooms, r.bathrooms, r.area, r.floor, r.status AS realEstateStatus,
+        (SELECT imageUrl FROM post_image WHERE postId = p.id LIMIT 1) AS thumbnail
+FROM favoritelist f
+JOIN post p ON f.postId = p.id
+JOIN user u ON p.userId = u.id
+LEFT JOIN real_estate r ON p.realEstateId = r.id
+WHERE f.userId = ?
+`,
+      [userId]
+    );
+
+    res.status(200).json(posts);
+  } catch (err) {
+    console.error('Error fetching favorite posts:', err);
+    res.status(500).json({ message: 'Lỗi khi lấy danh sách bài viết yêu thích' });
+  }
+};
+
+
+// GET /posts/is-favorite?userId=1&postId=123
+export const isFavorite = async (req, res) => {
+  const { userId, postId } = req.query;
+
+  try {
+    const result = await db.executeQueryAsyncDB(
+      'SELECT 1 FROM favoritelist WHERE userId = ? AND postId = ?',
+      [userId, postId]
+    );
+
+    res.json({ isFavorite: !!result });
+  } catch (err) {
+    console.error('Error checking favorite:', err);
+    res.status(500).json({ message: 'Internal error' });
   }
 };

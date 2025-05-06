@@ -10,6 +10,7 @@ dotenv.config();
 
 import upload from './middleware/multer.js';
 import adminRoute from './routes/admin/dashboard.route.js'
+import postAdminRoute from './routes/admin/post.route.js'
 import postRoute from './routes/post.route.js';
 import authRoute from "./routes/auth.route.js"
 import packageRoute from './routes/package.route.js'
@@ -71,6 +72,7 @@ app.use('/api/transaction', transactionRoute);
 
 /// router cho admin
 app.use('/admin', adminRoute)
+app.use('/admin/post', postAdminRoute)
 
 
 app.listen(8800, () => {
