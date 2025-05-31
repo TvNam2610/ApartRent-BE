@@ -2,24 +2,24 @@
 <html lang="en">
 
 <head>
-    <title>Apartrent | Quản lý bài đăng</title>
+    <title>Apartrent | Quản lý người dùng</title>
     <style>
         .text-truncate {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    cursor: pointer;
-}
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            cursor: pointer;
+        }
+
         .text-truncate:hover {
             overflow: visible;
             white-space: normal;
             text-overflow: clip;
-            background-color: #f8f9fa; /* Màu nền khi hover */
-            padding: 5px; /* Khoảng cách giữa văn bản và viền */
-            border-radius: 4px; /* Bo góc */
+            background-color: #f8f9fa;
+            padding: 5px;
+            border-radius: 4px;
         }
     </style>
-      
 </head>
 
 <body>
@@ -31,38 +31,18 @@
                 <div class="col-12">
                     <div class="card mb-0">
                         <div class="card-body">
-                            <ul class="nav nav-pills" id="statusTabs">
-                                <li class="nav-item">
-                                    <a class="nav-link active" href="#" data-status="PENDING">Pending<span class="badge badge-white"
-                                            id="pending-count">0</span></a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#" data-status="REJECTED">Rejected<span class="badge badge-primary"
-                                            id="rejected-count">0</span></a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#" data-status="APPROVED">Approved<span class="badge badge-primary"
-                                            id="approved-count">0</span></a>
-                                </li>
-                            </ul>
+                            <h4>Quản lý người dùng</h4>
                         </div>
                     </div>
                 </div>
             </div>
 
-          
-
             <div class="row mt-2">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4>Kiểm duyệt bài đăng</h4>
-
-                            <!-- Thêm phần chọn số lượng hiển thị -->
+                            <h4>Danh sách người dùng</h4>
                             <div class="card-header-form">
-
                                 <select class="form-control" id="pageSize">
                                     <option value="5">5 bản ghi</option>
                                     <option value="10">10 bản ghi</option>
@@ -70,45 +50,34 @@
                                     <option value="50">50 bản ghi</option>
                                     <option value="100">100 bản ghi</option>
                                 </select>
-
                             </div>
-                           
                             <div class="card-header-form">
                                 <form>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Nhập keyword tìm kiếm"
-                                            id="employee_id_search">
+                                        <input type="text" class="form-control" placeholder="Nhập tên người dùng hoặc email" id="user_search">
                                         <div class="input-group-btn">
-                                            <button class="btn btn-primary" id="search-button"><i
-                                                    class="fas fa-search"></i></button>
+                                            <button class="btn btn-primary" id="search-button"><i class="fas fa-search"></i></button>
                                         </div>
                                     </div>
                                 </form>
-
-
                             </div>
-
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-striped" id="table-1">
+                                <table class="table table-striped" id="user-table">
                                     <thead>
                                         <tr>
-                                          <th class="text-center">#</th>
-                                          <th>Tiêu đề</th>
-                                          <th>Gói tin</th>
-                                          <th>Giá (VNĐ)</th>
-                                          <th>Diện tích (m²)</th>
-                                          <th>Vị trí</th>
-                                          <th>Phòng ngủ</th>
-                                          <th>Trạng thái</th>
-                                          <th>Ngày đăng</th>
-                                          <th>Người đăng</th>
-                                          <th>Hành động</th>
+                                            <th class="text-center">#</th>
+                                            <th>Email</th>
+                                            <th>Tên người dùng</th>
+                                            <th>Điện thoại</th>
+                                            <th>Ngày tạo</th>
+                                            <th>Trạng thái</th>
+                                            <th>Hành động</th>
                                         </tr>
-                                      </thead>
-                                      
+                                    </thead>
                                     <tbody>
+                                        <!-- Dữ liệu sẽ được render bằng JS -->
                                     </tbody>
                                 </table>
                             </div>
@@ -119,7 +88,7 @@
                                     <li class="page-item disabled">
                                         <a class="page-link" href="#" tabindex="-1"><i class="fas fa-chevron-left"></i></a>
                                     </li>
-                                    <!-- Các trang sẽ được tạo động ở đây -->
+                                    <!-- Các trang sẽ được tạo động -->
                                     <li class="page-item disabled">
                                         <a class="page-link" href="#"><i class="fas fa-chevron-right"></i></a>
                                     </li>
@@ -133,30 +102,26 @@
         </div>
     </section>
 
-    <div class="modal fade" id="rejectModal" tabindex="-1" role="dialog">
+    <div class="modal fade" id="lockModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Lý do từ chối bài đăng</h5>
+              <h5 class="modal-title">Khóa tài khoản</h5>
               <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
             </div>
             <div class="modal-body">
-              <textarea id="rejectReason" class="form-control" rows="4" placeholder="Nhập lý do từ chối..."></textarea>
+              <textarea id="lockReason" class="form-control" rows="4" placeholder="Nhập lý do khóa tài khoản..."></textarea>
             </div>
             <div class="modal-footer">
               <button class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-              <button class="btn btn-danger" onclick="confirmReject()">Xác nhận từ chối</button>
+              <button class="btn btn-danger" onclick="confirmLock()">Xác nhận khóa</button>
             </div>
           </div>
         </div>
       </div>
-      
-
 
     <%- include ("./footer.ejs"); -%>
-
-    <script src="/JS/postManagement/postManagement.js"></script>
-
+    <script src="/JS/userManagement/userManagement.js"></script>
 </body>
 
 </html>

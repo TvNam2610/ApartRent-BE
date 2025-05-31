@@ -74,7 +74,7 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Thông tin đăng nhập không hợp lệ!" });
 
     // Tạo JWT token
-    const age = 1000 * 60 * 60 * 24 * 7; // 7 ngày
+    const age = 1000 * 60 * 60 ;
     const token = jwt.sign(
       {
         id: user.id,

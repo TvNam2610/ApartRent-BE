@@ -1,15 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <title>Apartrent | Trang Chủ</title>
+  <title>Apartrent | Thống kê & Báo cáo</title>
+  <link rel="stylesheet" href="/Assets/css/app.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-
 <body>
-    <%- include ("./header.ejs"); -%>
+  <%- include ("./header.ejs"); -%>
 
-    <%- include ("./footer.ejs"); -%>
+  <section class="section">
+    <div class="section-body">
+      <div class="row mb-4">
+        <div class="col-12">
+          <h4 class="mb-2">Thống kê hệ thống</h4>
+        </div>
 
+        <!-- Bộ lọc -->
+        <div class="col-md-3">
+          <label>Chọn tháng</label>
+          <input type="month" class="form-control" id="monthFilter" />
+        </div>
+      </div>
+
+      <!-- Tổng quan -->
+      <div class="row">
+        <div class="col-lg-3 col-md-6">
+          <div class="card card-statistic-1">
+            <div class="card-icon bg-primary"><i class="fas fa-file-alt"></i></div>
+            <div class="card-wrap">
+              <div class="card-header">Tổng tin đăng</div>
+              <div class="card-body" id="post-count">0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <div class="card card-statistic-1">
+            <div class="card-icon bg-success"><i class="fas fa-users"></i></div>
+            <div class="card-wrap">
+              <div class="card-header">Người dùng mới</div>
+              <div class="card-body" id="new-users">0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <div class="card card-statistic-1">
+            <div class="card-icon bg-info"><i class="fas fa-eye"></i></div>
+            <div class="card-wrap">
+              <div class="card-header">Lượt truy cập</div>
+              <div class="card-body" id="visits">0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <div class="card card-statistic-1">
+            <div class="card-icon bg-warning"><i class="fas fa-wallet"></i></div>
+            <div class="card-wrap">
+              <div class="card-header">Giao dịch</div>
+              <div class="card-body" id="transactions">0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Biểu đồ -->
+      <div class="row mt-4">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header"><h4>Biểu đồ giao dịch</h4></div>
+            <div class="card-body">
+              <canvas id="transactionChart" height="150"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header"><h4>Biểu đồ tin đăng</h4></div>
+            <div class="card-body">
+              <canvas id="postChart" height="150"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <%- include ("./footer.ejs"); -%>
+  <script src="/JS/dashboard/dashboard.js"></script>
 </body>
-
 </html>

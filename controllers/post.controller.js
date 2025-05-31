@@ -1,6 +1,11 @@
 import Database from "../database/database.js";// Nhập lớp Database để thực hiện truy vấn MySQL
 const db = new Database(); // Khởi tạo đối tượng Database
 import cloudinary from "../utils/cloudinary.js";
+import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+import { console } from "inspector";
+dotenv.config();
+
 
 //get post by user
 // controllers/post.controller.js
@@ -44,7 +49,7 @@ export const getPostsByUser = async (req, res) => {
       SELECT 
         p.id, p.title, p.status,
         pk.type AS packageType, pk.price AS amount,
-        p.startDate, r.location,
+        p.startDate, r.location,r.price,
         (SELECT imageUrl FROM post_image WHERE postId = p.id LIMIT 1) AS thumbnail
       FROM post p
       JOIN real_estate r ON p.realEstateId = r.id
@@ -198,12 +203,13 @@ export const getFilteredPosts = async (req, res) => {
     // Lấy dữ liệu bài đăng với điều kiện lọc
     const posts = await db.executeQueryAsyncDB(`
       SELECT 
-        p.id, p.title, p.status,
-        pk.type AS packageType, pk.price AS amount,
-        p.startDate, r.location, r.price AS realEstatePrice,
+        p.id, p.title, p.status,p.verified,
+        pk.type AS packageType, pk.price AS amount,u.username,u.email,
+        p.startDate, r.location, r.price AS realEstatePrice,p.createAt,
         r.bedrooms, r.bathrooms, r.area, r.floor, r.status AS realEstateStatus,
         (SELECT imageUrl FROM post_image WHERE postId = p.id LIMIT 1) AS thumbnail
       FROM post p
+      JOIN user u ON p.userId = u.id
       JOIN real_estate r ON p.realEstateId = r.id
       JOIN package pk ON p.packageId = pk.id
       ${whereSQL}
@@ -220,9 +226,38 @@ export const getFilteredPosts = async (req, res) => {
       ${whereSQL}
     `, params);
 
+    // Thêm truy vấn để đếm số bản ghi theo từng trạng thái
+    let statusCountsQuery = `
+    SELECT 
+        SUM(CASE WHEN status = "PENDING" THEN 1 ELSE 0 END) AS pending_count,
+        SUM(CASE WHEN status = "REJECTED" THEN 1 ELSE 0 END) AS rejected_count,
+        SUM(CASE WHEN status = "APPROVED" THEN 1 ELSE 0 END) AS approved_count
+    FROM post
+`;
+
+    const statusCountsResult = await db.executeQueryAsyncDB(statusCountsQuery, []);
+
+    const pendingCount = statusCountsResult[0].pending_count || 0;
+    const rejectedCount = statusCountsResult[0].rejected_count || 0;
+    const approvedCount = statusCountsResult[0].approved_count || 0;
+
+    const totalItems = countResult.total;
+    const totalPages = Math.ceil(totalItems / limit);
+
+
     res.status(200).json({
       posts,
-      total: countResult.total,
+      pagination: {
+        totalItems,
+        totalPages,
+        currentPage: page,
+        limit
+    },
+      statusCounts: {
+          pending: pendingCount,
+          rejected: rejectedCount,
+          approved: approvedCount
+      }
     });
   } catch (err) {
     console.error('Lỗi lấy bài đăng:', err);
@@ -233,8 +268,9 @@ export const getFilteredPosts = async (req, res) => {
 
 // Lấy bài đăng duy nhất theo ID
 export const getPost = async (req, res) => {
+  
   const { id } = req.params;
-
+  console.log('Fetching post with ID:', id);
   const query = `
     SELECT p.*, r.*, u.username, u.avatar
     FROM post p
@@ -243,12 +279,20 @@ export const getPost = async (req, res) => {
     WHERE p.id = ?
   `;
 
+  
+
   try {
     const post = await db.executeQueryAsyncDB(query, [id]);
     if (!post.length) {
       return res.status(404).json({ message: 'Post not found' });
     }
     res.status(200).json(post[0]);
+    // Ghi lại lượt truy cập
+    await db.executeQueryAsyncDB(
+      `INSERT INTO visit_log (postId, userId, ip, userAgent)
+      VALUES (?, ?, ?, ?)`,
+      [id, req.user?.id || null, req.ip, req.headers['user-agent']]
+    );
   } catch (err) {
     console.error('Error fetching post:', err);
     res.status(500).json({ message: 'Failed to get post' });
@@ -369,31 +413,116 @@ export const savePost = async (req, res) => {
 };
 
 // Cập nhật trạng thái bài đăng
+
 export const updatePostStatus = async (req, res) => {
-  const { id } = req.params;
-  const { status } = req.body;
+  const { postId, status, reason, email, title, username } = req.body;
 
-  if (!['PENDING', 'APPROVED', 'REJECTED'].includes(status)) {
-    return res.status(400).json({ message: 'Invalid status' });
+  if (!postId || !status || !email || !title) {
+      return res.status(400).json({ success: false, message: 'Thiếu dữ liệu' });
   }
-
-  const query = `
-    UPDATE post
-    SET status = ?
-    WHERE id = ?
-  `;
 
   try {
-    const result = await db.executeNonQuery(query, [status, id]);
-    if (result === 0) {
-      return res.status(404).json({ message: 'Post not found' });
-    }
-    res.status(200).json({ message: 'Post status updated successfully' });
+      // Cập nhật trạng thái bài đăng
+      await db.executeQueryAsyncDB('UPDATE post SET status = ? WHERE id = ?', [status, postId]);
+
+      // Gửi email thông báo
+      const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+              user: process.env.EMAIL_USER,
+              pass: process.env.EMAIL_PASS
+          }
+      });
+
+      const html = `
+        <p>Xin chào <b>${username}</b>,</p>
+        <p>Bài đăng <b>${title}</b> (ID: ${postId}) đã được <b style="color:${status === 'APPROVED' ? 'green' : 'red'}">
+        ${status === 'APPROVED' ? 'phê duyệt' : status === 'HIDDEN' ? 'ẩn' : 'từ chối'}</b>.</p>
+        ${status === 'REJECTED' && reason ? `<p><b>Lý do:</b> ${reason}</p>` : ''}
+        <p>Trân trọng,<br>Ban quản trị Apartrent</p>
+      `;
+
+      await transporter.sendMail({
+          from: process.env.EMAIL_USER,
+          to: email,
+          subject: `Bài đăng của bạn đã được ${status === 'APPROVED' ? 'phê duyệt' : status === 'HIDDEN' ? 'ẩn' : 'từ chối'}`,
+          html
+      });
+
+      return res.status(200).json({ success: true, message: 'Cập nhật & gửi email thành công' });
   } catch (err) {
-    console.error('Error updating post status:', err);
-    res.status(500).json({ message: 'Failed to update post status' });
+      console.error(err);
+      return res.status(500).json({ success: false, message: 'Lỗi server' });
   }
 };
+
+export const registerVisit = async (req, res) => {
+  const {
+      name,
+      phone,
+      email,
+      visitDate,
+      visitTime,
+      message,
+      postTitle,
+      username,
+      ownerEmail // email người bán
+  } = req.body;
+
+  // Kiểm tra các trường bắt buộc
+  if (!name || !phone || !email || !visitDate || !visitTime || !postTitle || !ownerEmail) {
+      return res.status(400).json({
+          success: false,
+          message: 'Vui lòng nhập đầy đủ thông tin bắt buộc.',
+      });
+  }
+
+  try {
+      // Tạo transporter gửi email
+      const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+              user: process.env.EMAIL_USER,
+              pass: process.env.EMAIL_PASS,
+          },
+      });
+
+      // Nội dung email gửi đến người bán
+      const htmlContent = `
+          <h3>📩 Yêu cầu tham quan căn hộ: <strong>${postTitle}</strong></h3>
+          <p>Một khách hàng đã gửi yêu cầu tham quan căn hộ bạn đăng:</p>
+          <ul>
+              <li><strong>Họ tên:</strong> ${name}</li>
+              <li><strong>Điện thoại:</strong> ${phone}</li>
+              <li><strong>Email:</strong> ${email}</li>
+              <li><strong>Thời gian tham quan:</strong> ${visitDate} lúc ${visitTime}</li>
+              <li><strong>Lời nhắn:</strong> ${message || 'Không có lời nhắn.'}</li>
+          </ul>
+          <p><i>Người gửi quan tâm đến căn hộ bạn đã đăng (người đăng: ${username || 'không xác định'}).</i></p>
+      `;
+
+      // Gửi email cho người bán
+      await transporter.sendMail({
+          from: process.env.EMAIL_USER,
+          to: ownerEmail,
+          subject: `📝 Yêu cầu tham quan căn hộ: ${postTitle}`,
+          html: htmlContent,
+      });
+
+      return res.status(200).json({
+          success: true,
+          message: 'Đã gửi email thông báo cho người bán.',
+      });
+  } catch (error) {
+      console.error('Lỗi khi gửi email:', error);
+      return res.status(500).json({
+          success: false,
+          message: 'Không thể gửi email. Vui lòng thử lại sau.',
+      });
+  }
+};
+
+
 
 
 // GET /posts/favorites/:userId
@@ -439,5 +568,48 @@ export const isFavorite = async (req, res) => {
   } catch (err) {
     console.error('Error checking favorite:', err);
     res.status(500).json({ message: 'Internal error' });
+  }
+};
+
+
+
+
+// Đánh dấu tin đã xác minh (Admin dùng)
+export const verified = async (req, res) => {
+  try {
+    await db.executeQueryAsyncDB('UPDATE post SET verified = true WHERE id = ?', [req.params.id]);
+    res.json({ success: true, message: 'Đã xác minh bài đăng.' });
+  } catch (err) {
+    console.error('Lỗi xác minh bài:', err);
+    res.status(500).json({ success: false, message: 'Lỗi server' });
+  }
+};
+
+// Báo cáo bài đăng vi phạm/lừa đảo
+export const report = async (req, res) => {
+  const { reason } = req.body;
+  try {
+    await db.executeQueryAsyncDB(
+      'INSERT INTO post_reports (postId, reason) VALUES (?, ?)',
+      [req.params.id, reason || 'Không rõ lý do']
+    );
+    res.json({ success: true, message: 'Đã gửi báo cáo.' });
+  } catch (err) {
+    console.error('Lỗi gửi báo cáo:', err);
+    res.status(500).json({ success: false, message: 'Lỗi server' });
+  }
+};
+
+// Lấy số lượt báo cáo cho một bài đăng
+export const countReport =  async (req, res) => {
+  try {
+    const result = await db.executeQueryAsyncDB(
+      'SELECT COUNT(*) AS reportCount FROM post_reports WHERE postId = ?',
+      [req.params.id]
+    );
+    res.json({ success: true, reportCount: result[0]?.reportCount || 0 });
+  } catch (err) {
+    console.error('Lỗi lấy số lượt báo cáo:', err);
+    res.status(500).json({ success: false, message: 'Lỗi server' });
   }
 };

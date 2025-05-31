@@ -9,13 +9,13 @@ dotenv.config();
 
 
 import upload from './middleware/multer.js';
-import adminRoute from './routes/admin/dashboard.route.js'
-import postAdminRoute from './routes/admin/post.route.js'
+import adminRoute from './routes/admin/admin.route.js'
+
 import postRoute from './routes/post.route.js';
 import authRoute from "./routes/auth.route.js"
 import packageRoute from './routes/package.route.js'
 // import testRoute from "./routes/test.route.js"
-// import userRoute from "./routes/user.route.js"
+import userRoute from "./routes/user.route.js"
 // import favoriteRoute from "./routes/favorite.route.js"
 // import vnpayRoute from "./routes/vnpay.route.js"
 import walletRoute from "./routes/wallet.route.js"
@@ -57,7 +57,7 @@ app.use(cookieParser())
 
 // app.get("/api/post", postRoute)
 app.use("/api/auth", authRoute)
-// app.use("/api/users", userRoute)
+app.use("/api/users", userRoute)
 // app.use("/api/test", testRoute)
 app.use("/api/posts", postRoute)
 app.use("/api/package", packageRoute)
@@ -72,8 +72,6 @@ app.use('/api/transaction', transactionRoute);
 
 /// router cho admin
 app.use('/admin', adminRoute)
-app.use('/admin/post', postAdminRoute)
-
 
 app.listen(8800, () => {
     console.log("serve is running"); 

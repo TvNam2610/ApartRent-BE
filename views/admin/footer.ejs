@@ -97,13 +97,28 @@
 <!-- footer Content -->
 <footer class="main-footer">
     <div class="footer-left">
-        <a href="#">INNOVATION TEAM</a></a>
+        <a href="#">TRAN VAN NAM</a></a>
     </div>
     <div class="footer-right">
     </div>
 </footer>
 </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const currentPath = window.location.pathname;
+        const navLinks = document.querySelectorAll('.sidebar-menu a.nav-link');
+
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                // Xóa "active" khỏi các phần tử khác
+                navLinks.forEach(l => l.parentElement.classList.remove('active'));
+                // Thêm "active" vào phần tử phù hợp
+                link.parentElement.classList.add('active');
+            }
+        });
+    });
+</script>
 <!-- General JS Scripts -->
 <script src="/assets/js/app.min.js"></script>
 <!-- JS Libraies -->
